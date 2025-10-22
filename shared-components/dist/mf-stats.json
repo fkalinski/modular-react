@@ -1,0 +1,216 @@
+{
+  "id": "shared_components",
+  "name": "shared_components",
+  "metaData": {
+    "name": "shared_components",
+    "type": "app",
+    "buildInfo": {
+      "buildVersion": "1.0.0",
+      "buildName": "@modular-platform/shared-components"
+    },
+    "remoteEntry": {
+      "name": "remoteEntry.js",
+      "path": "",
+      "type": "global"
+    },
+    "types": {
+      "path": "",
+      "name": "",
+      "zip": "",
+      "api": ""
+    },
+    "globalName": "shared_components",
+    "pluginVersion": "0.2.8",
+    "publicPath": "auto"
+  },
+  "shared": [
+    {
+      "singleton": true,
+      "requiredVersion": "^18.3.1",
+      "shareScope": "default",
+      "name": "react-dom",
+      "version": "18.3.1",
+      "eager": false,
+      "id": "shared_components:react-dom",
+      "assets": {
+        "js": {
+          "async": [
+            "540.js"
+          ],
+          "sync": [
+            "961.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      },
+      "usedIn": []
+    },
+    {
+      "singleton": true,
+      "requiredVersion": "^18.3.1",
+      "shareScope": "default",
+      "name": "react",
+      "version": "18.3.1",
+      "eager": false,
+      "id": "shared_components:react",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      },
+      "usedIn": [
+        "./Input",
+        "./Table",
+        "./Tree",
+        "./Theme"
+      ]
+    }
+  ],
+  "remotes": [],
+  "exposes": [
+    {
+      "path": "./Button",
+      "id": "shared_components:Button",
+      "name": "Button",
+      "requires": [],
+      "file": "src/components/Button",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Button.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    },
+    {
+      "path": "./Input",
+      "id": "shared_components:Input",
+      "name": "Input",
+      "requires": [
+        "react"
+      ],
+      "file": "src/components/Input",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Input.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    },
+    {
+      "path": "./Table",
+      "id": "shared_components:Table",
+      "name": "Table",
+      "requires": [
+        "react"
+      ],
+      "file": "src/components/Table",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Table.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    },
+    {
+      "path": "./Tree",
+      "id": "shared_components:Tree",
+      "name": "Tree",
+      "requires": [
+        "react"
+      ],
+      "file": "src/components/Tree",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Tree.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    },
+    {
+      "path": "./Layout",
+      "id": "shared_components:Layout",
+      "name": "Layout",
+      "requires": [],
+      "file": "src/components/Layout",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Layout.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    },
+    {
+      "path": "./Theme",
+      "id": "shared_components:Theme",
+      "name": "Theme",
+      "requires": [
+        "react"
+      ],
+      "file": "src/theme/ThemeProvider",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Theme.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      }
+    }
+  ]
+}

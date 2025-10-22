@@ -1,0 +1,185 @@
+{
+  "id": "shared_components",
+  "name": "shared_components",
+  "metaData": {
+    "name": "shared_components",
+    "type": "app",
+    "buildInfo": {
+      "buildVersion": "1.0.0",
+      "buildName": "@modular-platform/shared-components"
+    },
+    "remoteEntry": {
+      "name": "remoteEntry.js",
+      "path": "",
+      "type": "global"
+    },
+    "types": {
+      "path": "",
+      "name": "",
+      "zip": "",
+      "api": ""
+    },
+    "globalName": "shared_components",
+    "pluginVersion": "0.2.8",
+    "publicPath": "auto"
+  },
+  "shared": [
+    {
+      "id": "shared_components:react-dom",
+      "name": "react-dom",
+      "version": "18.3.1",
+      "singleton": true,
+      "requiredVersion": "^18.3.1",
+      "assets": {
+        "js": {
+          "async": [
+            "540.js"
+          ],
+          "sync": [
+            "961.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    },
+    {
+      "id": "shared_components:react",
+      "name": "react",
+      "version": "18.3.1",
+      "singleton": true,
+      "requiredVersion": "^18.3.1",
+      "assets": {
+        "js": {
+          "async": [],
+          "sync": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "async": [],
+          "sync": []
+        }
+      }
+    }
+  ],
+  "remotes": [],
+  "exposes": [
+    {
+      "id": "shared_components:Button",
+      "name": "Button",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Button.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./Button"
+    },
+    {
+      "id": "shared_components:Input",
+      "name": "Input",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Input.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./Input"
+    },
+    {
+      "id": "shared_components:Table",
+      "name": "Table",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Table.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./Table"
+    },
+    {
+      "id": "shared_components:Tree",
+      "name": "Tree",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Tree.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./Tree"
+    },
+    {
+      "id": "shared_components:Layout",
+      "name": "Layout",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Layout.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./Layout"
+    },
+    {
+      "id": "shared_components:Theme",
+      "name": "Theme",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Theme.js"
+          ],
+          "async": [
+            "540.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./Theme"
+    }
+  ]
+}
