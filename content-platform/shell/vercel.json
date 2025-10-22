@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "content-platform-shell",
   "buildCommand": "npm run build:prod",
   "outputDirectory": "dist",
   "devCommand": "npm start",
@@ -25,7 +24,7 @@
       ]
     }
   ],
-  "rewews": [
+  "rewrites": [
     {
       "source": "/(.*)",
       "destination": "/index.html"

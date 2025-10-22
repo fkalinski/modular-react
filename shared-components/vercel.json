@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "shared-components",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "devCommand": "npm start",
