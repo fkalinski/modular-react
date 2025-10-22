@@ -1,0 +1,293 @@
+name: Deploy Module Federation Apps to Vercel
+
+on:
+  push:
+    branches:
+      - main
+      - claude/**
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Deploy Shared Components first (other modules depend on it)
+  deploy-shared-components:
+    name: Deploy Shared Components
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: shared-components/package-lock.json
+
+      - name: Install dependencies
+        working-directory: shared-components
+        run: npm ci
+
+      - name: Build
+        working-directory: shared-components
+        run: npm run build
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_SHARED_COMPONENTS_PROJECT_ID }}
+          working-directory: shared-components
+          vercel-args: '--prod'
+
+  # Deploy Shared Data
+  deploy-shared-data:
+    name: Deploy Shared Data
+    runs-on: ubuntu-latest
+    needs: deploy-shared-components
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: shared-data/package-lock.json
+
+      - name: Install dependencies
+        working-directory: shared-data
+        run: npm ci
+
+      - name: Build
+        working-directory: shared-data
+        run: npm run build
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_SHARED_DATA_PROJECT_ID }}
+          working-directory: shared-data
+          vercel-args: '--prod'
+
+  # Deploy Content Platform Shell
+  deploy-content-platform:
+    name: Deploy Content Platform
+    runs-on: ubuntu-latest
+    needs: [deploy-shared-components, deploy-shared-data]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: content-platform/shell/package-lock.json
+
+      - name: Install dependencies
+        working-directory: content-platform/shell
+        run: npm ci
+
+      - name: Build
+        working-directory: content-platform/shell
+        run: npm run build:prod
+        env:
+          REMOTE_SHARED_COMPONENTS_URL: https://shared-components.vercel.app
+          REMOTE_SHARED_DATA_URL: https://shared-data.vercel.app
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_CONTENT_PLATFORM_PROJECT_ID }}
+          working-directory: content-platform/shell
+          vercel-args: '--prod'
+
+  # Deploy Files Tab
+  deploy-files-tab:
+    name: Deploy Files Tab
+    runs-on: ubuntu-latest
+    needs: deploy-shared-components
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: content-platform/files-folders/package-lock.json
+
+      - name: Install dependencies
+        working-directory: content-platform/files-folders
+        run: npm ci
+
+      - name: Build
+        working-directory: content-platform/files-folders
+        run: npm run build:prod
+        env:
+          REMOTE_SHARED_COMPONENTS_URL: https://shared-components.vercel.app
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_FILES_TAB_PROJECT_ID }}
+          working-directory: content-platform/files-folders
+          vercel-args: '--prod'
+
+  # Deploy Hubs Tab
+  deploy-hubs-tab:
+    name: Deploy Hubs Tab
+    runs-on: ubuntu-latest
+    needs: deploy-shared-components
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: hubs-tab/package-lock.json
+
+      - name: Install dependencies
+        working-directory: hubs-tab
+        run: npm ci
+
+      - name: Build
+        working-directory: hubs-tab
+        run: npm run build:prod
+        env:
+          REMOTE_SHARED_COMPONENTS_URL: https://shared-components.vercel.app
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_HUBS_TAB_PROJECT_ID }}
+          working-directory: hubs-tab
+          vercel-args: '--prod'
+
+  # Deploy Reports Tab
+  deploy-reports-tab:
+    name: Deploy Reports Tab
+    runs-on: ubuntu-latest
+    needs: deploy-shared-components
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: reports-tab/package-lock.json
+
+      - name: Install dependencies
+        working-directory: reports-tab
+        run: npm ci
+
+      - name: Build
+        working-directory: reports-tab
+        run: npm run build:prod
+        env:
+          REMOTE_SHARED_COMPONENTS_URL: https://shared-components.vercel.app
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_REPORTS_TAB_PROJECT_ID }}
+          working-directory: reports-tab
+          vercel-args: '--prod'
+
+  # Deploy User Tab
+  deploy-user-tab:
+    name: Deploy User Tab
+    runs-on: ubuntu-latest
+    needs: deploy-shared-components
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: user-tab/package-lock.json
+
+      - name: Install dependencies
+        working-directory: user-tab
+        run: npm ci
+
+      - name: Build
+        working-directory: user-tab
+        run: npm run build:prod
+        env:
+          REMOTE_SHARED_COMPONENTS_URL: https://shared-components.vercel.app
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_USER_TAB_PROJECT_ID }}
+          working-directory: user-tab
+          vercel-args: '--prod'
+
+  # Deploy Top-Level Shell (main app) last
+  deploy-shell:
+    name: Deploy Top-Level Shell
+    runs-on: ubuntu-latest
+    needs: [deploy-shared-components, deploy-shared-data, deploy-content-platform, deploy-files-tab, deploy-reports-tab, deploy-user-tab]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: top-level-shell/package-lock.json
+
+      - name: Install dependencies
+        working-directory: top-level-shell
+        run: npm ci
+
+      - name: Build
+        working-directory: top-level-shell
+        run: npm run build:prod
+        env:
+          REMOTE_SHARED_COMPONENTS_URL: https://shared-components.vercel.app
+          REMOTE_SHARED_DATA_URL: https://shared-data.vercel.app
+          REMOTE_CONTENT_SHELL_URL: https://content-platform-shell.vercel.app
+          REMOTE_REPORTS_TAB_URL: https://reports-tab.vercel.app
+          REMOTE_USER_TAB_URL: https://user-tab.vercel.app
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_SHELL_PROJECT_ID }}
+          working-directory: top-level-shell
+          vercel-args: '--prod'
+          alias-domains: |
+            modular-platform.vercel.app

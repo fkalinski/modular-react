@@ -5,6 +5,12 @@ const path = require('path');
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
 
+  // Get remote URLs from environment variables or use defaults
+  const getRemoteUrl = (name, defaultUrl) => {
+    const envVar = `REMOTE_${name.toUpperCase()}_URL`;
+    return process.env[envVar] || defaultUrl;
+  };
+
   return {
     entry: './src/index.tsx',
     mode: argv.mode || 'development',
@@ -19,6 +25,7 @@ module.exports = (env, argv) => {
     output: {
       publicPath: isProduction ? 'auto' : 'http://localhost:3000/',
       clean: true,
+      path: path.resolve(__dirname, 'dist'),
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
@@ -41,19 +48,19 @@ module.exports = (env, argv) => {
         name: 'top_level_shell',
         remotes: {
           shared_components: isProduction
-            ? 'shared_components@https://cdn.example.com/shared-components/remoteEntry.js'
+            ? `shared_components@${getRemoteUrl('shared_components', 'https://shared-components.vercel.app')}/remoteEntry.js`
             : 'shared_components@http://localhost:3001/remoteEntry.js',
           shared_data: isProduction
-            ? 'shared_data@https://cdn.example.com/shared-data/remoteEntry.js'
+            ? `shared_data@${getRemoteUrl('shared_data', 'https://shared-data.vercel.app')}/remoteEntry.js`
             : 'shared_data@http://localhost:3002/remoteEntry.js',
           content_shell: isProduction
-            ? 'content_shell@https://cdn.example.com/content-shell/remoteEntry.js'
+            ? `content_shell@${getRemoteUrl('content_shell', 'https://content-platform-shell.vercel.app')}/remoteEntry.js`
             : 'content_shell@http://localhost:3003/remoteEntry.js',
           reports_tab: isProduction
-            ? 'reports_tab@https://cdn.example.com/reports-tab/remoteEntry.js'
+            ? `reports_tab@${getRemoteUrl('reports_tab', 'https://reports-tab.vercel.app')}/remoteEntry.js`
             : 'reports_tab@http://localhost:3006/remoteEntry.js',
           user_tab: isProduction
-            ? 'user_tab@https://cdn.example.com/user-tab/remoteEntry.js'
+            ? `user_tab@${getRemoteUrl('user_tab', 'https://user-tab.vercel.app')}/remoteEntry.js`
             : 'user_tab@http://localhost:3007/remoteEntry.js',
         },
         shared: {
