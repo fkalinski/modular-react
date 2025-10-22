@@ -2,14 +2,42 @@ import React, { createContext, useContext, ReactNode } from 'react';
 
 export interface Theme {
   colors: {
+    // Primary
     primary: string;
+    primaryHover: string;
+    primaryLight: string;
+
+    // Sidebar
+    sidebarBg: string;
+    sidebarText: string;
+    sidebarTextMuted: string;
+    sidebarHover: string;
+    sidebarActive: string;
+
+    // Background
+    background: string;
+    surface: string;
+
+    // Text
+    textPrimary: string;
+    textSecondary: string;
+    textMuted: string;
+
+    // Borders
+    border: string;
+    borderLight: string;
+
+    // States
+    hover: string;
+    selected: string;
+    selectedBorder: string;
+
+    // Legacy (for backwards compatibility)
     secondary: string;
     danger: string;
     success: string;
     warning: string;
     text: string;
-    background: string;
-    border: string;
   };
   spacing: {
     xs: string;
@@ -17,6 +45,7 @@ export interface Theme {
     md: string;
     lg: string;
     xl: string;
+    xxl: string;
   };
   typography: {
     fontFamily: string;
@@ -27,35 +56,76 @@ export interface Theme {
       lg: string;
       xl: string;
     };
+    fontWeight: {
+      regular: number;
+      medium: number;
+      semibold: number;
+      bold: number;
+    };
   };
 }
 
 const defaultTheme: Theme = {
   colors: {
-    primary: '#0066cc',
+    // Primary - Box Blue
+    primary: '#0061d5',
+    primaryHover: '#0053ba',
+    primaryLight: '#e7f1ff',
+
+    // Sidebar
+    sidebarBg: '#2d2d2d',
+    sidebarText: '#ffffff',
+    sidebarTextMuted: '#a0a0a0',
+    sidebarHover: '#404040',
+    sidebarActive: '#0061d5',
+
+    // Background
+    background: '#f7f7f8',
+    surface: '#ffffff',
+
+    // Text
+    textPrimary: '#222222',
+    textSecondary: '#767676',
+    textMuted: '#909090',
+
+    // Borders
+    border: '#e2e2e2',
+    borderLight: '#f0f0f0',
+
+    // States
+    hover: '#f7f7f8',
+    selected: '#e7f1ff',
+    selectedBorder: '#0061d5',
+
+    // Legacy (for backwards compatibility)
     secondary: '#6c757d',
     danger: '#dc3545',
     success: '#28a745',
     warning: '#ffc107',
-    text: '#212529',
-    background: '#ffffff',
-    border: '#dee2e6',
+    text: '#222222',
   },
   spacing: {
     xs: '4px',
     sm: '8px',
-    md: '16px',
-    lg: '24px',
-    xl: '32px',
+    md: '12px',
+    lg: '16px',
+    xl: '20px',
+    xxl: '24px',
   },
   typography: {
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     fontSize: {
-      xs: '12px',
-      sm: '14px',
-      md: '16px',
-      lg: '18px',
-      xl: '24px',
+      xs: '11px',
+      sm: '12px',
+      md: '13px',
+      lg: '14px',
+      xl: '16px',
+    },
+    fontWeight: {
+      regular: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
     },
   },
 };
@@ -80,6 +150,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       fontSize: {
         ...defaultTheme.typography.fontSize,
         ...theme.typography?.fontSize,
+      },
+      fontWeight: {
+        ...defaultTheme.typography.fontWeight,
+        ...theme.typography?.fontWeight,
       },
     },
   };

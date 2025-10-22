@@ -107,110 +107,95 @@ const ContentPlatform: React.FC = () => {
   const activeTab = loadedTabs.find(t => t.plugin.config.id === activeTabId);
   const ActiveTabComponent = activeTab?.plugin.component;
 
-  const headerStyles: React.CSSProperties = {
-    marginBottom: '20px',
-    paddingBottom: '16px',
-    borderBottom: '2px solid #e9ecef',
+  // Box design system - Content platform styles
+  const containerStyles: React.CSSProperties = {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: '#ffffff',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  };
+
+  const tabNavContainerStyles: React.CSSProperties = {
+    borderBottom: '1px solid #e2e2e2',
+    backgroundColor: '#ffffff',
+    padding: '0 20px',
   };
 
   const tabNavStyles: React.CSSProperties = {
     display: 'flex',
-    gap: '4px',
-    marginTop: '16px',
+    gap: '0',
+    alignItems: 'center',
   };
 
   const tabButtonStyles = (isActive: boolean): React.CSSProperties => ({
-    padding: '10px 20px',
-    backgroundColor: isActive ? '#0066cc' : 'transparent',
-    color: isActive ? '#fff' : '#666',
-    border: '1px solid',
-    borderColor: isActive ? '#0066cc' : '#dee2e6',
-    borderRadius: '4px 4px 0 0',
+    padding: '12px 16px',
+    backgroundColor: 'transparent',
+    color: isActive ? '#0061d5' : '#767676',
+    border: 'none',
+    borderBottom: isActive ? '2px solid #0061d5' : '2px solid transparent',
     cursor: 'pointer',
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: isActive ? 600 : 400,
-    transition: 'all 0.2s',
+    transition: 'all 0.15s',
+    marginBottom: '-1px',
+    position: 'relative' as const,
   });
 
+  const contentStyles: React.CSSProperties = {
+    flex: 1,
+    overflow: 'auto',
+  };
+
   return (
-    <Suspense fallback={<div>Loading Content Platform...</div>}>
-      <div>
-        <Card title="Content Platform">
-          <p style={{ marginBottom: '16px', color: '#666' }}>
-            Extensible content platform with pluggable tabs. Each tab implements the TabPlugin contract
-            and can be deployed independently.
-          </p>
+    <Suspense fallback={<div style={{ padding: '20px' }}>Loading Content Platform...</div>}>
+      <div style={containerStyles}>
+        {/* Box design system - Horizontal tab navigation */}
+        <div style={tabNavContainerStyles}>
+          <div style={tabNavStyles}>
+            {loadedTabs.map(({ plugin }) => (
+              <button
+                key={plugin.config.id}
+                style={tabButtonStyles(activeTabId === plugin.config.id)}
+                onClick={() => setActiveTabId(plugin.config.id)}
+                onMouseEnter={(e) => {
+                  if (activeTabId !== plugin.config.id) {
+                    e.currentTarget.style.color = '#222222';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (activeTabId !== plugin.config.id) {
+                    e.currentTarget.style.color = '#767676';
+                  }
+                }}
+              >
+                {plugin.config.icon && <span style={{ marginRight: '6px' }}>{plugin.config.icon}</span>}
+                {plugin.config.name}
+              </button>
+            ))}
+          </div>
+        </div>
 
-          {/* Search & Filter Pane */}
-          <div style={headerStyles}>
-            <h3 style={{ fontSize: '16px', marginBottom: '12px', color: '#333' }}>
-              Search & Filters
-            </h3>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
-              <div style={{ flex: 1 }}>
-                <Input
-                  label="Search"
-                  value={searchText}
-                  onChange={setSearchText}
-                  placeholder="Search content..."
-                />
+        {/* Active Tab Content */}
+        <div style={contentStyles}>
+          {ActiveTabComponent ? (
+            <Suspense fallback={
+              <div style={{ padding: '40px', textAlign: 'center', color: '#767676' }}>
+                Loading tab...
               </div>
-              <Button variant="primary" onClick={handleSearch}>
-                Apply Filters
-              </Button>
-              <Button variant="secondary" onClick={() => setSearchText('')}>
-                Clear
-              </Button>
+            }>
+              <ActiveTabComponent
+                context={contentContext}
+                onNavigate={handleNavigate}
+                onSelect={handleSelect}
+              />
+            </Suspense>
+          ) : (
+            <div style={{ padding: '40px', textAlign: 'center', color: '#767676' }}>
+              {loadedTabs.length === 0 ? 'Loading tabs...' : 'No tab selected'}
             </div>
-
-            {/* Tab Navigation */}
-            <div style={tabNavStyles}>
-              {loadedTabs.map(({ plugin }) => (
-                <button
-                  key={plugin.config.id}
-                  style={tabButtonStyles(activeTabId === plugin.config.id)}
-                  onClick={() => setActiveTabId(plugin.config.id)}
-                  onMouseEnter={(e) => {
-                    if (activeTabId !== plugin.config.id) {
-                      e.currentTarget.style.backgroundColor = '#f8f9fa';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activeTabId !== plugin.config.id) {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                    }
-                  }}
-                >
-                  {plugin.config.icon && <span style={{ marginRight: '6px' }}>{plugin.config.icon}</span>}
-                  {plugin.config.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Active Tab Content */}
-          <div style={{ minHeight: '400px' }}>
-            {ActiveTabComponent ? (
-              <Suspense fallback={<div style={{ padding: '20px', textAlign: 'center' }}>Loading tab...</div>}>
-                <ActiveTabComponent
-                  context={contentContext}
-                  onNavigate={handleNavigate}
-                  onSelect={handleSelect}
-                />
-              </Suspense>
-            ) : (
-              <div style={{ padding: '40px', textAlign: 'center', color: '#999' }}>
-                {loadedTabs.length === 0 ? 'Loading tabs...' : 'No tab selected'}
-              </div>
-            )}
-          </div>
-
-          {/* Debug Info */}
-          <div style={{ marginTop: '20px', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '12px' }}>
-            <strong>Debug:</strong> Loaded {loadedTabs.length} tabs | Active: {activeTabId} |
-            Search: "{searchText}" | Selected: {contentContext.selection.selectedIds.length} items
-          </div>
-        </Card>
+          )}
+        </div>
       </div>
     </Suspense>
   );
