@@ -147,32 +147,65 @@ const ContentPlatform: React.FC = () => {
     overflow: 'auto',
   };
 
+  const hitCountStyles: React.CSSProperties = {
+    marginLeft: '4px',
+    color: '#767676',
+    fontWeight: 400,
+  };
+
+  // Get search hit counts for each tab
+  const getTabHitCount = (plugin: any) => {
+    const searchQuery = contentContext.filters.searchText;
+
+    if (!searchQuery || searchQuery.trim() === '') {
+      return null; // Don't show count when not searching
+    }
+
+    if (plugin.getSearchHitCount) {
+      try {
+        return plugin.getSearchHitCount(searchQuery);
+      } catch (error) {
+        console.error(`Error getting hit count for ${plugin.config.id}:`, error);
+        return null;
+      }
+    }
+    return null;
+  };
+
   return (
     <Suspense fallback={<div style={{ padding: '20px' }}>Loading Content Platform...</div>}>
       <div style={containerStyles}>
         {/* Box design system - Horizontal tab navigation */}
         <div style={tabNavContainerStyles}>
           <div style={tabNavStyles}>
-            {loadedTabs.map(({ plugin }) => (
-              <button
-                key={plugin.config.id}
-                style={tabButtonStyles(activeTabId === plugin.config.id)}
-                onClick={() => setActiveTabId(plugin.config.id)}
-                onMouseEnter={(e) => {
-                  if (activeTabId !== plugin.config.id) {
-                    e.currentTarget.style.color = '#222222';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (activeTabId !== plugin.config.id) {
-                    e.currentTarget.style.color = '#767676';
-                  }
-                }}
-              >
-                {plugin.config.icon && <span style={{ marginRight: '6px' }}>{plugin.config.icon}</span>}
-                {plugin.config.name}
-              </button>
-            ))}
+            {loadedTabs.map(({ plugin }) => {
+              const hitCount = getTabHitCount(plugin);
+              const isActive = activeTabId === plugin.config.id;
+
+              return (
+                <button
+                  key={plugin.config.id}
+                  style={tabButtonStyles(isActive)}
+                  onClick={() => setActiveTabId(plugin.config.id)}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.color = '#222222';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.color = '#767676';
+                    }
+                  }}
+                >
+                  {plugin.config.icon && <span style={{ marginRight: '6px' }}>{plugin.config.icon}</span>}
+                  {plugin.config.name}
+                  {hitCount !== null && (
+                    <span style={hitCountStyles}>({hitCount})</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 

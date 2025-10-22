@@ -98,6 +98,9 @@ export interface TabPlugin {
   onActivate?: () => void | Promise<void>;
   onDeactivate?: () => void | Promise<void>;
 
+  // Search support - returns number of items matching search
+  getSearchHitCount?: (searchText: string) => number | Promise<number>;
+
   // Context requirements (for validation)
   contextRequirements?: Array<keyof ContentContext>;
 }

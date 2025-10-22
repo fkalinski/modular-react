@@ -282,6 +282,19 @@ const FilesTabPlugin: TabPlugin = {
     console.log('[FilesTab] Tab deactivated');
   },
 
+  // Search support - count matching files
+  getSearchHitCount: (searchText: string) => {
+    if (!searchText || searchText.trim() === '') {
+      return mockFiles.length; // Return total when no search
+    }
+
+    const lowerSearch = searchText.toLowerCase();
+    return mockFiles.filter(file =>
+      file.name.toLowerCase().includes(lowerSearch) ||
+      file.mimeType?.toLowerCase().includes(lowerSearch)
+    ).length;
+  },
+
   contextRequirements: ['filters', 'selection'],
 };
 
