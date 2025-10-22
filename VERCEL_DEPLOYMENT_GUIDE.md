@@ -1,8 +1,19 @@
 # Vercel Deployment Guide
 
-## ✅ Issue Fixed
+## ✅ Issues Fixed
 
-The **DTS plugin error** has been resolved! All webpack configs now have `dts: false` to prevent TypeScript type generation failures in Vercel's CI/CD environment.
+1. **DTS plugin error** - All webpack configs now have `dts: false`
+2. **Workspace dependencies** - See `ARTIFACTORY_DEPLOYMENT.md` for production strategy
+
+## Important: Workspace Dependencies
+
+Modules like `files-folders` depend on `@content-platform/tab-contract`. For production deployment, you need to:
+
+1. **Publish `tab-contract` to Artifactory first** (or npm)
+2. **Configure `.npmrc`** in dependent modules
+3. **Set `NPM_TOKEN`** in Vercel environment variables
+
+**See [ARTIFACTORY_DEPLOYMENT.md](./ARTIFACTORY_DEPLOYMENT.md) for complete guide.**
 
 ## Deployment Choices - Verified Correct ✅
 
