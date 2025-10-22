@@ -1,0 +1,23 @@
+{
+  "name": "@content-platform/graphql-server",
+  "version": "1.0.0",
+  "description": "Mock GraphQL server for Content Platform development",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": ["graphql", "mock", "server"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
