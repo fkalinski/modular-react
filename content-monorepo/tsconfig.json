@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/content-e2e"
+    },
+    {
+      "path": "./apps/content"
+    },
+    {
+      "path": "./files-and-folders-e2e"
+    },
+    {
+      "path": "./files-and-folders"
+    },
+    {
+      "path": "./files-and-folders-e2e"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/content/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

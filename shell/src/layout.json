@@ -1,0 +1,12 @@
+{
+  "components": [
+    {
+      "component": "Content",
+      "path": "content/App"
+    },
+    {
+      "component": "Hubs",
+      "path": "hubs/App"
+    }
+  ]
+}
