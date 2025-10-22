@@ -52,6 +52,11 @@ module.exports = (env, argv) => {
           './Tree': './src/components/Tree',
           './Layout': './src/components/Layout',
           './Theme': './src/theme/ThemeProvider',
+          './Sidebar': './src/components/Sidebar',
+          './TopBar': './src/components/TopBar',
+          './SearchBar': './src/components/SearchBar',
+          './FileIcon': './src/components/FileIcon',
+          './ReactSingletonTest': './src/components/ReactSingletonTest',
         },
         shared: {
           react: {

@@ -8,6 +8,7 @@ export { Sidebar, type SidebarProps, type SidebarItem } from './components/Sideb
 export { TopBar, type TopBarProps } from './components/TopBar';
 export { SearchBar, type SearchBarProps, type SearchScope } from './components/SearchBar';
 export { FileIcon, type FileIconProps, type FileType, getFileTypeFromName } from './components/FileIcon';
+export { ReactSingletonTest } from './components/ReactSingletonTest';
 
 // Theme
 export { ThemeProvider, useTheme, type Theme, type ThemeProviderProps } from './theme/ThemeProvider';
