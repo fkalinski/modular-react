@@ -5,6 +5,7 @@ const ThemeProvider = lazy(() => import('shared_components/Theme').then(m => ({ 
 const Sidebar = lazy(() => import('shared_components/Sidebar').then(m => ({ default: m.Sidebar })));
 const TopBar = lazy(() => import('shared_components/TopBar').then(m => ({ default: m.TopBar })));
 const SearchBar = lazy(() => import('shared_components/SearchBar').then(m => ({ default: m.SearchBar })));
+const NavigationProvider = lazy(() => import('shared_components/NavigationService').then(m => ({ default: m.NavigationProvider })));
 
 // Lazy load tabs
 const ContentShell = lazy(() => import('content_shell/ContentPlatform').catch(() => ({
@@ -122,7 +123,11 @@ const App: React.FC = () => {
   return (
     <Suspense fallback={<div style={{ padding: '20px', textAlign: 'center' }}>Loading platform...</div>}>
       <ThemeProvider>
-        <div style={appContainerStyles}>
+        <NavigationProvider
+          currentSection={activeTab}
+          onNavigate={(target) => setActiveTab(target as TabId)}
+        >
+          <div style={appContainerStyles}>
           {/* Box design system - Dark sidebar navigation */}
           <Sidebar
             items={sidebarItems}
@@ -162,6 +167,7 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
+        </NavigationProvider>
       </ThemeProvider>
     </Suspense>
   );

@@ -57,6 +57,8 @@ module.exports = (env, argv) => {
           './SearchBar': './src/components/SearchBar',
           './FileIcon': './src/components/FileIcon',
           './ReactSingletonTest': './src/components/ReactSingletonTest',
+          './ContentPicker': './src/components/ContentPicker',
+          './NavigationService': './src/services/NavigationService',
         },
         shared: {
           react: {

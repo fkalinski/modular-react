@@ -9,6 +9,18 @@ export { TopBar, type TopBarProps } from './components/TopBar';
 export { SearchBar, type SearchBarProps, type SearchScope } from './components/SearchBar';
 export { FileIcon, type FileIconProps, type FileType, getFileTypeFromName } from './components/FileIcon';
 export { ReactSingletonTest } from './components/ReactSingletonTest';
+export { ContentPicker, type ContentPickerProps, type ContentLocation } from './components/ContentPicker';
+
+// Services
+export {
+  NavigationProvider,
+  useNavigation,
+  NavigationLink,
+  type NavigationContextValue,
+  type NavigationProviderProps,
+  type NavigationLinkProps,
+  type NavigationTarget,
+} from './services/NavigationService';
 
 // Theme
 export { ThemeProvider, useTheme, type Theme, type ThemeProviderProps } from './theme/ThemeProvider';

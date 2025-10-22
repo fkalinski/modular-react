@@ -6,6 +6,8 @@ const Tree = lazy(() => import('shared_components/Tree').then(m => ({ default: m
 const Table = lazy(() => import('shared_components/Table').then(m => ({ default: m.Table })));
 const Button = lazy(() => import('shared_components/Button').then(m => ({ default: m.Button })));
 const FileIcon = lazy(() => import('shared_components/FileIcon').then(m => ({ default: m.FileIcon, getFileTypeFromName: m.getFileTypeFromName })));
+const ContentPicker = lazy(() => import('shared_components/ContentPicker').then(m => ({ default: m.ContentPicker })));
+const NavigationLink = lazy(() => import('shared_components/NavigationService').then(m => ({ default: m.NavigationLink })));
 
 // Mock data for demonstration
 const mockFolderTree = [
@@ -48,6 +50,7 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
   const [selectedFolder, setSelectedFolder] = useState<string>();
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [files, setFiles] = useState<ContentItem[]>(mockFiles);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   // React to context changes (filters)
   useEffect(() => {
@@ -186,6 +189,14 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
                 </button>
                 <Button
                   size="small"
+                  variant="secondary"
+                  onClick={() => setIsPickerOpen(true)}
+                  disabled={selectedFiles.length === 0}
+                >
+                  Move To...
+                </Button>
+                <Button
+                  size="small"
                   variant="primary"
                   onClick={() => alert('Upload file')}
                 >
@@ -229,6 +240,65 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
           </div>
         </div>
       </div>
+
+      {/* Content Picker Dialog - Demo of shared reusable component */}
+      <Suspense fallback={null}>
+        <ContentPicker
+          isOpen={isPickerOpen}
+          onClose={() => setIsPickerOpen(false)}
+          onSelect={(location: any) => {
+            console.log('Moving files to:', location);
+            alert(`Moving ${selectedFiles.length} file(s) to: ${location.name}`);
+            setIsPickerOpen(false);
+          }}
+          title="Choose Destination"
+          locations={mockFolderTree.map((node: any) => ({
+            id: node.id,
+            name: node.label,
+            type: 'folder' as const,
+            icon: node.icon,
+            children: node.children?.map((child: any) => ({
+              id: child.id,
+              name: child.label,
+              type: 'folder' as const,
+              icon: child.icon,
+              children: child.children?.map((grandchild: any) => ({
+                id: grandchild.id,
+                name: grandchild.label,
+                type: 'folder' as const,
+                icon: grandchild.icon,
+              })),
+            })),
+          }))}
+          multiSelect={false}
+          searchable={true}
+          confirmLabel="Move Here"
+        />
+      </Suspense>
+
+      {/* Navigation Link Demo - Cross-section navigation */}
+      {selectedFiles.length > 0 && (
+        <div style={{
+          position: 'absolute',
+          bottom: '20px',
+          right: '20px',
+          padding: '12px',
+          backgroundColor: '#ffffff',
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          fontSize: '12px',
+          color: '#767676',
+        }}>
+          <div style={{ marginBottom: '8px' }}>
+            {selectedFiles.length} file(s) selected
+          </div>
+          <Suspense fallback={null}>
+            <NavigationLink to="reports" style={{ fontSize: '12px' }}>
+              Generate Report →
+            </NavigationLink>
+          </Suspense>
+        </div>
+      )}
     </Suspense>
   );
 };
