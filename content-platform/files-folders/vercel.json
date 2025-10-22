@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "files-tab",
   "buildCommand": "npm run build:prod",
   "outputDirectory": "dist",
   "devCommand": "npm start",

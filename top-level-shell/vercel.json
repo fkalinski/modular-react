@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "modular-platform-shell",
   "buildCommand": "npm run build:prod",
   "outputDirectory": "dist",
   "devCommand": "npm start",
