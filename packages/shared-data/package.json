@@ -1,0 +1,35 @@
+{
+  "name": "@modular-platform/shared-data",
+  "version": "1.0.0",
+  "description": "Shared data layer with Redux and GraphQL",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production && npm run build:types",
+    "build:types": "tsc --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.0.4",
+    "@apollo/client": "^3.8.8",
+    "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "@module-federation/enhanced": "^0.2.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "html-webpack-plugin": "^5.5.3",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.3.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
