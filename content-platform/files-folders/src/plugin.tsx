@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
-import type { TabPlugin, TabProps, ContentItem } from '@tab-contract';
+import type { TabPlugin, TabProps, ContentItem } from './types';
 
 // Lazy load shared components
 const Tree = lazy(() => import('shared_components/Tree').then(m => ({ default: m.Tree })));
