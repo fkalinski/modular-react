@@ -11,13 +11,17 @@ A proof-of-concept for a modular, extensible React platform using Module Federat
 ## 🚀 Quick Start
 
 ```bash
-# Install and run everything
-npm install
-npm run install:all
-npm run dev
+# Each folder is a separate "repository" (simulated)
+# Install dependencies for each module:
 
-# Access the platform
-open http://localhost:3000
+cd shared-components && npm install && npm run dev &      # port 3001
+cd shared-data && npm install && npm run dev &            # port 3002
+cd top-level-shell && npm install && npm run dev &        # port 3000
+cd content-platform/shell && npm install && npm run dev & # port 3003
+cd content-platform/files-folders && npm install && npm run dev & # port 3004
+
+# Or see ./scripts/dev-all.sh for a helper script
+# Access the platform at http://localhost:3000
 ```
 
 ## Architecture Overview
@@ -31,15 +35,17 @@ This PoC demonstrates:
 
 ## Repository Structure
 
+**Note:** Top-level folders simulate separate repositories (as they would be in production):
+
 ```
-packages/
-├── shared-components/       # Federated component library (v1.x)
-├── shared-data/            # Federated Redux + GraphQL client
-├── top-level-shell/        # Main application shell
-├── reports-tab/            # Simple federated tab
-├── user-tab/               # Simple federated tab
-├── hubs-tab/               # External tab using shared libs
-└── content-platform/       # Content platform (monorepo)
+modular-react/               # This is NOT a monorepo
+├── shared-components/       # Repo 1: Federated component library (v1.x)
+├── shared-data/            # Repo 2: Federated Redux + GraphQL client
+├── top-level-shell/        # Repo 3: Main application shell
+├── reports-tab/            # Repo 4: Simple federated tab
+├── user-tab/               # Repo 5: Simple federated tab
+├── hubs-tab/               # Repo 6: External tab using shared libs
+└── content-platform/       # Repo 7: Content platform (this one IS a monorepo)
     ├── tab-contract/       # Tab plugin interface
     ├── shell/              # Content shell with search/filter
     └── files-folders/      # Files tab implementation
