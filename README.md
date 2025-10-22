@@ -2,6 +2,24 @@
 
 A proof-of-concept for a modular, extensible React platform using Module Federation 2.0.
 
+## 📚 Documentation
+
+- **[Implementation Summary](./IMPLEMENTATION_SUMMARY.md)** - What was built and what's next
+- **[Usage Guide](./USAGE_GUIDE.md)** - Quick start and how to create new tabs
+- **[Complete Architecture Design](./MODULAR_PLATFORM_DESIGN.md)** - Detailed design document (65 pages)
+
+## 🚀 Quick Start
+
+```bash
+# Install and run everything
+npm install
+npm run install:all
+npm run dev
+
+# Access the platform
+open http://localhost:3000
+```
+
 ## Architecture Overview
 
 This PoC demonstrates:
