@@ -1,0 +1,27 @@
+{
+  "name": "@content-platform/shell",
+  "version": "1.0.0",
+  "description": "Content platform shell with extensible tabs",
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.0.4",
+    "@reduxjs/toolkit": "^2.0.1",
+    "@content-platform/tab-contract": "1.0.0"
+  },
+  "devDependencies": {
+    "@module-federation/enhanced": "^0.2.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "html-webpack-plugin": "^5.5.3",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.3.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

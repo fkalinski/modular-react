@@ -1,0 +1,17 @@
+{
+  "name": "@content-platform/tab-contract",
+  "version": "1.0.0",
+  "description": "Tab plugin contract for content platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}
