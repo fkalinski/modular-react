@@ -80,6 +80,7 @@ module.exports = (env, argv) => {
           },
         },
         shareStrategy: 'version-first',
+        dts: false, // Disable type generation in CI/CD environments
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',

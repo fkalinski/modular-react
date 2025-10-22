@@ -70,6 +70,7 @@ module.exports = (env, argv) => {
           'react-redux': { singleton: true, requiredVersion: '^9.0.0', strictVersion: false },
         },
         shareStrategy: 'version-first',
+        dts: false, // Disable type generation in CI/CD environments
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',

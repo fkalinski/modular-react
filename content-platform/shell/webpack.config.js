@@ -59,6 +59,8 @@ module.exports = (env, argv) => {
           '@reduxjs/toolkit': { singleton: true, requiredVersion: '^2.0.0' },
           'react-redux': { singleton: true, requiredVersion: '^9.0.0' },
         },
+        shareStrategy: 'version-first',
+        dts: false, // Disable type generation in CI/CD environments
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',

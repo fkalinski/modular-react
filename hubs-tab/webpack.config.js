@@ -44,6 +44,8 @@ module.exports = (env, argv) => {
           react: { singleton: true, requiredVersion: '^18.0.0' },
           'react-dom': { singleton: true, requiredVersion: '^18.0.0' },
         },
+        shareStrategy: 'version-first',
+        dts: false, // Disable type generation in CI/CD environments
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',
