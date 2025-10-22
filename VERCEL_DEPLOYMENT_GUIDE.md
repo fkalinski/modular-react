@@ -254,6 +254,21 @@ Error: write EPIPE
 
 **Solution:** ✅ Already fixed! All webpack configs now have `dts: false`.
 
+### Issue 1.5: Workspace Package Dependencies ✅ FIXED
+
+**Error:**
+```
+npm error 404 '@content-platform/tab-contract@1.0.0' is not in this registry
+```
+
+**Cause:** Federated modules had dependencies on local workspace packages that don't exist in npm registry.
+
+**Solution:** ✅ Already fixed! Tab contract types are now inlined in each module:
+- `content-platform/files-folders/src/types.ts` - Contains all tab contract interfaces
+- Import changed from `'@tab-contract'` to `'./types'`
+- Removed workspace dependency from package.json
+- Each module is now completely self-contained
+
 ### Issue 2: remoteEntry.js 404
 
 **Error:**
