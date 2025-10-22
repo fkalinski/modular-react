@@ -8,6 +8,7 @@ const Button = lazy(() => import('shared_components/Button').then(m => ({ defaul
 const FileIcon = lazy(() => import('shared_components/FileIcon').then(m => ({ default: m.FileIcon, getFileTypeFromName: m.getFileTypeFromName })));
 const ContentPicker = lazy(() => import('shared_components/ContentPicker').then(m => ({ default: m.ContentPicker })));
 const NavigationLink = lazy(() => import('shared_components/NavigationService').then(m => ({ default: m.NavigationLink })));
+const Breadcrumbs = lazy(() => import('shared_components/Breadcrumbs').then(m => ({ default: m.Breadcrumbs })));
 
 // Mock data for demonstration
 const mockFolderTree = [
@@ -47,10 +48,15 @@ const mockFiles: ContentItem[] = [
 
 // Tab component implementation
 const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }) => {
-  const [selectedFolder, setSelectedFolder] = useState<string>();
+  const [selectedFolder, setSelectedFolder] = useState<string>('root');
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [files, setFiles] = useState<ContentItem[]>(mockFiles);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [breadcrumbPath, setBreadcrumbPath] = useState([
+    { id: 'content', label: 'Content', icon: '📁' },
+    { id: 'files', label: 'Files & Folders', icon: '📂' },
+    { id: 'root', label: 'My Documents', icon: '📁' },
+  ]);
 
   // React to context changes (filters)
   useEffect(() => {
@@ -67,6 +73,29 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
   const handleFolderSelect = (node: any) => {
     setSelectedFolder(node.id);
     onNavigate(node.id);
+
+    // Update breadcrumbs based on selected folder
+    if (node.id === 'root') {
+      setBreadcrumbPath([
+        { id: 'content', label: 'Content', icon: '📁' },
+        { id: 'files', label: 'Files & Folders', icon: '📂' },
+        { id: 'root', label: 'My Documents', icon: '📁' },
+      ]);
+    } else if (node.id === 'work') {
+      setBreadcrumbPath([
+        { id: 'content', label: 'Content', icon: '📁' },
+        { id: 'files', label: 'Files & Folders', icon: '📂' },
+        { id: 'root', label: 'My Documents', icon: '📁' },
+        { id: 'work', label: 'Work', icon: '📁' },
+      ]);
+    } else if (node.id === 'personal') {
+      setBreadcrumbPath([
+        { id: 'content', label: 'Content', icon: '📁' },
+        { id: 'files', label: 'Files & Folders', icon: '📂' },
+        { id: 'root', label: 'My Documents', icon: '📁' },
+        { id: 'personal', label: 'Personal', icon: '📁' },
+      ]);
+    }
   };
 
   const handleFileClick = (file: ContentItem) => {
@@ -143,6 +172,23 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
 
   return (
     <Suspense fallback={<div style={{ padding: '20px' }}>Loading Files...</div>}>
+      {/* Breadcrumbs */}
+      <Suspense fallback={null}>
+        <Breadcrumbs
+          items={breadcrumbPath}
+          onItemClick={(item) => {
+            if (item.id === 'files') {
+              setBreadcrumbPath([
+                { id: 'content', label: 'Content', icon: '📁' },
+                { id: 'files', label: 'Files & Folders', icon: '📂' },
+                { id: 'root', label: 'My Documents', icon: '📁' },
+              ]);
+              setSelectedFolder('root');
+            }
+          }}
+        />
+      </Suspense>
+
       <div style={containerStyles}>
         {/* Left Panel - Folder Tree */}
         <div style={leftPanelStyles}>

@@ -10,6 +10,7 @@ export { SearchBar, type SearchBarProps, type SearchScope } from './components/S
 export { FileIcon, type FileIconProps, type FileType, getFileTypeFromName } from './components/FileIcon';
 export { ReactSingletonTest } from './components/ReactSingletonTest';
 export { ContentPicker, type ContentPickerProps, type ContentLocation } from './components/ContentPicker';
+export { Breadcrumbs, type BreadcrumbsProps, type BreadcrumbItem } from './components/Breadcrumbs';
 
 // Services
 export {

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 
 // Lazy load remote modules - Box design system components
 const ThemeProvider = lazy(() => import('shared_components/Theme').then(m => ({ default: m.ThemeProvider })));
@@ -34,9 +34,47 @@ const tabs: Tab[] = [
   { id: 'user', label: 'User', component: UserTab },
 ];
 
+// Helper functions for URL state management
+const getUrlParams = () => {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    tab: (params.get('tab') || 'content') as TabId,
+    search: params.get('search') || '',
+  };
+};
+
+const updateUrlParams = (tab: TabId, search: string) => {
+  const params = new URLSearchParams();
+  params.set('tab', tab);
+  if (search) {
+    params.set('search', search);
+  }
+  const newUrl = `${window.location.pathname}?${params.toString()}`;
+  window.history.pushState({}, '', newUrl);
+};
+
 const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('content');
-  const [searchValue, setSearchValue] = useState('');
+  // Initialize from URL params
+  const urlParams = getUrlParams();
+  const [activeTab, setActiveTab] = useState<TabId>(urlParams.tab);
+  const [searchValue, setSearchValue] = useState(urlParams.search);
+
+  // Update URL when state changes
+  useEffect(() => {
+    updateUrlParams(activeTab, searchValue);
+  }, [activeTab, searchValue]);
+
+  // Handle browser back/forward
+  useEffect(() => {
+    const handlePopState = () => {
+      const urlParams = getUrlParams();
+      setActiveTab(urlParams.tab);
+      setSearchValue(urlParams.search);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Box design system - Sidebar items
   const sidebarItems = [
