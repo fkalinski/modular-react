@@ -376,7 +376,7 @@ const HubsTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect })
                   selectedIds={selectedHubs}
                   onSelectionChange={setSelectedHubs}
                   showCheckboxes={true}
-                  onRowClick={(hub) => handleHubClick(hub)}
+                  onRowClick={(hub: Hub) => handleHubClick(hub)}
                 />
               </div>
             </Suspense>
@@ -447,19 +447,6 @@ const HubsTabPlugin: TabPlugin = {
 
   onDeactivate: () => {
     console.log('[HubsTab] Tab deactivated');
-  },
-
-  // Search support - count matching hubs
-  getSearchHitCount: (searchText: string) => {
-    if (!searchText || searchText.trim() === '') {
-      return mockHubs.length; // Return total when no search
-    }
-
-    const lowerSearch = searchText.toLowerCase();
-    return mockHubs.filter(hub =>
-      hub.name.toLowerCase().includes(lowerSearch) ||
-      hub.description.toLowerCase().includes(lowerSearch)
-    ).length;
   },
 
   contextRequirements: ['filters', 'selection', 'navigation'],
