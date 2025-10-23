@@ -46,6 +46,9 @@ node_modules/.cache/
 @mf-types/
 .mf/
 
+# Turborepo
+.turbo/
+
 # Logs
 logs/
 *.log
