@@ -22,6 +22,9 @@ module.exports = (env, argv) => {
         : 'http://localhost:3001/',
       clean: true,
     },
+    watchOptions: {
+      ignored: ['**/node_modules/**', '**/@mf-types/**'],
+    },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
       alias: {
@@ -75,7 +78,9 @@ module.exports = (env, argv) => {
         },
         // Module Federation 2.0 features
         shareStrategy: 'version-first',
-        dts: false, // We'll generate types separately
+        dts: {
+          generateTypes: true,
+        },
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',

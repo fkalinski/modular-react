@@ -9,8 +9,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "paths": {
+      "*": ["./@mf-types/*"]
+    }
   },
-  "include": ["src/**/*", "src/types/**/*.d.ts"],
+  "include": ["src/**/*", "./@mf-types/*"],
   "exclude": ["node_modules", "dist"]
 }

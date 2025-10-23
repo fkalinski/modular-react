@@ -27,6 +27,9 @@ module.exports = (env, argv) => {
       clean: true,
       path: path.resolve(__dirname, 'dist'),
     },
+    watchOptions: {
+      ignored: ['**/node_modules/**', '**/@mf-types/**'],
+    },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
@@ -70,7 +73,9 @@ module.exports = (env, argv) => {
           'react-redux': { singleton: true, requiredVersion: '^9.0.0', strictVersion: false },
         },
         shareStrategy: 'version-first',
-        dts: false, // Disable type generation in CI/CD environments
+        dts: {
+          consumeTypes: true,
+        },
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',

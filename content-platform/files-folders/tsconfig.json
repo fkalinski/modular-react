@@ -9,8 +9,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "paths": {
-      "@tab-contract": ["../tab-contract/src"]
+      "@tab-contract": ["../tab-contract/src"],
+      "*": ["./@mf-types/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "./@mf-types/*"]
 }

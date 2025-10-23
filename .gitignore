@@ -43,6 +43,8 @@ node_modules/.cache/
 
 # Module Federation
 .federation/
+@mf-types/
+.mf/
 
 # Logs
 logs/

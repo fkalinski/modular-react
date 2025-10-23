@@ -17,6 +17,9 @@ module.exports = (env, argv) => {
       publicPath: isProduction ? 'auto' : 'http://localhost:3003/',
       clean: true,
     },
+    watchOptions: {
+      ignored: ['**/node_modules/**', '**/@mf-types/**'],
+    },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
       alias: {
@@ -60,7 +63,9 @@ module.exports = (env, argv) => {
           'react-redux': { singleton: true, requiredVersion: '^9.0.0' },
         },
         shareStrategy: 'version-first',
-        dts: false, // Disable type generation in CI/CD environments
+        dts: {
+          consumeTypes: true,
+        },
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',

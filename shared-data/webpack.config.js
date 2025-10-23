@@ -22,6 +22,9 @@ module.exports = (env, argv) => {
         : 'http://localhost:3002/',
       clean: true,
     },
+    watchOptions: {
+      ignored: ['**/node_modules/**', '**/@mf-types/**'],
+    },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
       alias: {
@@ -80,7 +83,9 @@ module.exports = (env, argv) => {
           },
         },
         shareStrategy: 'version-first',
-        dts: false, // Disable type generation in CI/CD environments
+        dts: {
+          generateTypes: true,
+        },
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',
