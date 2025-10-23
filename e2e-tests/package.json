@@ -11,7 +11,8 @@
     "test:report": "playwright show-report",
     "test:module-federation": "playwright test tests/module-federation.spec.ts",
     "test:tab-contract": "playwright test tests/tab-contract.spec.ts",
-    "test:state-sharing": "playwright test tests/state-sharing.spec.ts"
+    "test:state-sharing": "playwright test tests/state-sharing.spec.ts",
+    "test:type-distribution": "playwright test tests/type-distribution.spec.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",

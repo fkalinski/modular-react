@@ -32,6 +32,9 @@ npm run test:tab-contract
 
 # State Sharing tests
 npm run test:state-sharing
+
+# Type Distribution tests
+npm run test:type-distribution
 ```
 
 ### With UI
@@ -115,14 +118,39 @@ Validates Redux state sharing and synchronization:
 - No state inconsistencies or race conditions
 - State changes are atomic and predictable
 
+### 4. Type Distribution Tests (`type-distribution.spec.ts`)
+
+Validates cross-repo TypeScript type distribution:
+
+- ✅ **Type Packaging**: Verifies package-types.js creates @mf-types.zip correctly
+- ✅ **Type Fetching**: Tests that all consumers have fetch-types.js script
+- ✅ **Prebuild Hooks**: Validates fetch:types runs before build
+- ✅ **TypeScript Config**: Ensures @mf-types is included in tsconfig.json
+- ✅ **Type Extraction**: Verifies @mf-types/index.d.ts exists after fetch
+- ✅ **Module Declarations**: Validates correct module format (shared_components./Button)
+- ✅ **IntelliSense Support**: Tests that types enable IDE autocomplete
+- ✅ **Build-Time Type Safety**: Confirms no TS2307 module resolution errors
+- ✅ **Type Consistency**: Ensures all consumers use identical types
+- ✅ **Performance**: Verifies type package is small (~11KB)
+- ✅ **Error Handling**: Tests graceful failure when types missing
+
+**Key Validations:**
+- Producer creates @mf-types.zip with 14 module declarations
+- All consumers fetch types automatically via prebuild hooks
+- TypeScript compilation succeeds with full type safety
+- No "Cannot find module" errors at build time or runtime
+- Types are consistent across all tabs (Button, Table, Input props match)
+- Type package size is optimized for fast fetching
+
 ## Test Structure
 
 ```
 e2e-tests/
 ├── tests/
-│   ├── module-federation.spec.ts   # 10 tests
-│   ├── tab-contract.spec.ts        # 15 tests
-│   └── state-sharing.spec.ts       # 15 tests
+│   ├── module-federation.spec.ts   # 10 tests - Module Federation validation
+│   ├── tab-contract.spec.ts        # 15 tests - Plugin contract compliance
+│   ├── state-sharing.spec.ts       # 15 tests - Redux/Context synchronization
+│   └── type-distribution.spec.ts   # 18 tests - TypeScript type distribution
 ├── playwright.config.ts             # Playwright configuration
 ├── package.json
 └── README.md
@@ -277,12 +305,13 @@ test.describe('Feature Name', () => {
 
 ## Test Metrics
 
-- **Total Tests**: 40
-- **Test Suites**: 3
+- **Total Tests**: 58
+- **Test Suites**: 4
 - **Coverage Areas**:
   - Module Federation: 10 tests
   - Tab Contract: 15 tests
   - State Sharing: 15 tests
+  - Type Distribution: 18 tests
 - **Expected Duration**: ~2-3 minutes (all tests)
 - **Browser**: Chromium (can add Firefox, WebKit)
 
@@ -338,7 +367,7 @@ npx playwright install chromium
 
 ## Success Criteria
 
-All 40 tests should pass, validating:
+All 58 tests should pass, validating:
 
 ✅ **Module Federation works end-to-end**
 - Remote modules load correctly
@@ -354,5 +383,12 @@ All 40 tests should pass, validating:
 - Redux state synchronizes
 - Context propagates changes
 - No race conditions
+
+✅ **Type Distribution is production-ready**
+- Producer packages types correctly
+- Consumers fetch types automatically
+- TypeScript compilation succeeds
+- No module resolution errors
+- Types are consistent across repositories
 
 This proves the architecture is production-ready.
