@@ -8,11 +8,16 @@
     "shared-data",
     "content-platform/shell",
     "content-platform/files-folders",
+    "content-platform/tab-contract",
     "hubs-tab",
     "reports-tab",
     "user-tab",
     "top-level-shell",
-    "graphql-server"
+    "graphql-server",
+    "contract-tests",
+    "platform-context",
+    "shared-state",
+    "content-platform-data"
   ],
   "scripts": {
     "build": "turbo run build",
@@ -28,5 +33,6 @@
   "engines": {
     "node": ">=18",
     "npm": ">=9"
-  }
+  },
+  "packageManager": "npm@10.2.4"
 }

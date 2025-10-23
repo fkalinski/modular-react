@@ -21,6 +21,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@content-platform/tab-contract": "1.0.0"
+    "@content-platform/tab-contract": "*"
   }
 }

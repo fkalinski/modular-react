@@ -1,4 +1,4 @@
-import { configureStore, combineReducers, Reducer, AnyAction } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, Reducer, AnyAction, EnhancedStore } from '@reduxjs/toolkit';
 import filtersReducer from './slices/filtersSlice';
 import selectionReducer from './slices/selectionSlice';
 import navigationReducer from './slices/navigationSlice';
@@ -11,14 +11,15 @@ const staticReducers = {
 };
 
 export type RootState = ReturnType<typeof createRootReducer>;
-export type AppDispatch = ReturnType<typeof createStore>['dispatch'];
 
 // Store interface with dynamic reducer injection
-export interface DynamicStore extends ReturnType<typeof createStore> {
+export interface DynamicStore extends EnhancedStore {
   asyncReducers: { [key: string]: Reducer };
   injectReducer: (key: string, reducer: Reducer) => void;
   removeReducer: (key: string) => void;
 }
+
+export type AppDispatch = DynamicStore['dispatch'];
 
 function createRootReducer(asyncReducers = {}) {
   return combineReducers({
@@ -39,7 +40,7 @@ export function createStore(preloadedState = {}) {
           ignoredPaths: ['graphql.client'],
         },
       }),
-  }) as DynamicStore;
+  }) as unknown as DynamicStore;
 
   // Add a dictionary to keep track of the async reducers
   store.asyncReducers = {};
