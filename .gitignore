@@ -44,6 +44,7 @@ node_modules/.cache/
 # Module Federation
 .federation/
 @mf-types/
+@mf-types.zip
 .mf/
 
 # Turborepo
