@@ -260,14 +260,13 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
                   key: 'name',
                   header: 'Name',
                   width: '45%',
-                  render: (file: ContentItem) => {
-                    const FileIconComponent = FileIcon as any;
+                  render: (file) => {
                     return (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Suspense fallback={<span>📄</span>}>
-                          <FileIconComponent type="file" size={20} />
+                          <FileIcon type="file" size={20} />
                         </Suspense>
-                        <span>{file.name}</span>
+                        <span>{(file as ContentItem).name}</span>
                       </div>
                     );
                   },

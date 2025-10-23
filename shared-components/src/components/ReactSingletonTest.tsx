@@ -1,6 +1,18 @@
 import React from 'react';
 
 /**
+ * Type definition for React's internal API used for singleton verification.
+ * This is intentionally marked as "DO_NOT_USE" by React team but is acceptable
+ * for testing/verification purposes.
+ */
+interface ReactInternals {
+  ReactCurrentDispatcher: unknown;
+  ReactCurrentOwner: unknown;
+  ReactCurrentBatchConfig: unknown;
+  [key: string]: unknown;
+}
+
+/**
  * Test component to verify React singleton behavior across Module Federation boundaries
  *
  * This component should show the SAME React instance ID in all federated modules,
@@ -8,7 +20,10 @@ import React from 'react';
  */
 export const ReactSingletonTest: React.FC = () => {
   // Get React internals to verify singleton
-  const reactInternals = (React as any).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  // Note: Using React internals is acceptable here for diagnostic/testing purposes
+  const reactInternals = (React as typeof React & {
+    __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: ReactInternals;
+  }).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
   // Generate a unique ID for this React instance
   const instanceId = reactInternals

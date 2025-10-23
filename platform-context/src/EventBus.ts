@@ -117,6 +117,12 @@ export const subscribeToEvent = <K extends keyof PlatformEvents>(
 
 /**
  * Subscribe to multiple events at once
+ * Returns a single unsubscribe function that unsubscribes from all
+ *
+ * Note: Due to TypeScript's limitations with mapped tuple types, individual handlers
+ * are not fully type-checked within the array. Each handler receives PlatformEvents[K]
+ * data at runtime, but TypeScript cannot enforce the connection between event name
+ * and handler parameter type within the tuple.
  *
  * @example
  * const unsubscribe = subscribeToMultiple([
@@ -125,10 +131,12 @@ export const subscribeToEvent = <K extends keyof PlatformEvents>(
  * ]);
  */
 export const subscribeToMultiple = (
-  subscriptions: Array<[keyof PlatformEvents, (data: any) => void]>
+  subscriptions: ReadonlyArray<readonly [keyof PlatformEvents, (data: any) => void]>
 ): (() => void) => {
   const unsubscribers = subscriptions.map(([event, handler]) =>
-    subscribeToEvent(event as any, handler)
+    // TypeScript limitation: Cannot preserve type relationship in mapped tuples
+    // At runtime, this is type-safe because subscribeToEvent enforces the constraint
+    subscribeToEvent(event, handler as (data: PlatformEvents[typeof event]) => void)
   );
 
   // Return function that unsubscribes from all

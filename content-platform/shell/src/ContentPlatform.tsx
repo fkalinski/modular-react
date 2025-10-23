@@ -7,18 +7,31 @@ const Card = lazy(() => import('shared_components/Layout').then(m => ({ default:
 const Input = lazy(() => import('shared_components/Input').then(m => ({ default: m.Input })));
 const Button = lazy(() => import('shared_components/Button').then(m => ({ default: m.Button })));
 
-// Lazy load tabs
-const FilesTab = lazy(() => import('files_tab/Plugin').catch(() => ({
-  default: { config: { id: 'files', name: 'Files (unavailable)' }, component: () =>
-    <div style={{ padding: '20px', color: '#999' }}>Files tab not available</div>
-  }
-})));
+// Load tab plugins (not lazy - they're configs, not components)
+// We'll lazy load the actual components inside the plugins
+const loadFilesTab = () => import('files_tab/Plugin').catch(() => ({
+  default: {
+    config: {
+      id: 'files',
+      name: 'Files (unavailable)',
+      version: '1.0.0',
+      componentVersion: '1.0.0'
+    },
+    component: () => <div style={{ padding: '20px', color: '#999' }}>Files tab not available</div>
+  } as TabPlugin
+}));
 
-const HubsTab = lazy(() => import('hubs_tab/Plugin').catch(() => ({
-  default: { config: { id: 'hubs', name: 'Hubs (unavailable)' }, component: () =>
-    <div style={{ padding: '20px', color: '#999' }}>Hubs tab not available</div>
-  }
-})));
+const loadHubsTab = () => import('hubs_tab/Plugin').catch(() => ({
+  default: {
+    config: {
+      id: 'hubs',
+      name: 'Hubs (unavailable)',
+      version: '1.0.0',
+      componentVersion: '1.0.0'
+    },
+    component: () => <div style={{ padding: '20px', color: '#999' }}>Hubs tab not available</div>
+  } as TabPlugin
+}));
 
 interface LoadedTab {
   plugin: TabPlugin;
@@ -39,12 +52,12 @@ const ContentPlatform: React.FC = () => {
   useEffect(() => {
     const loadTabs = async () => {
       try {
-        const filesModule = await FilesTab;
-        const hubsModule = await HubsTab;
+        const filesModule = await loadFilesTab();
+        const hubsModule = await loadHubsTab();
 
         const tabs: LoadedTab[] = [
-          { plugin: filesModule.default as TabPlugin },
-          { plugin: hubsModule.default as TabPlugin },
+          { plugin: filesModule.default },
+          { plugin: hubsModule.default },
         ];
 
         // Register tabs and inject reducers if needed
@@ -96,12 +109,12 @@ const ContentPlatform: React.FC = () => {
     // Dispatch selection action
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     console.log('[ContentPlatform] Search:', searchText);
-    // Dispatch filter action from shared-data
-    if ((window as any).sharedDataActions) {
-      dispatch((window as any).sharedDataActions.setSearchText(searchText));
-    }
+    // Dynamically import and dispatch action from shared-data
+    // This pattern avoids TypeScript re-export resolution issues in Module Federation
+    const { setSearchText } = await import('shared_data/store');
+    dispatch(setSearchText(searchText));
   };
 
   const activeTab = loadedTabs.find(t => t.plugin.config.id === activeTabId);

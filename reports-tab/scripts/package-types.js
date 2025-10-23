@@ -16,26 +16,13 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const FEDERATION_DIR = path.join(__dirname, '../node_modules/.federation/dist');
+const TYPES_DIR = path.join(__dirname, '../src');
 const OUTPUT_DIR = path.join(__dirname, '../dist/@mf-types');
 const OUTPUT_ZIP = path.join(__dirname, '../dist/@mf-types.zip');
 
 // Module Federation exposes configuration (from webpack.config.js)
 const EXPOSES = {
-  './Button': './src/components/Button',
-  './Input': './src/components/Input',
-  './Table': './src/components/Table',
-  './Tree': './src/components/Tree',
-  './Layout': './src/components/Layout',
-  './Theme': './src/theme/ThemeProvider',
-  './Sidebar': './src/components/Sidebar',
-  './TopBar': './src/components/TopBar',
-  './SearchBar': './src/components/SearchBar',
-  './FileIcon': './src/components/FileIcon',
-  './ReactSingletonTest': './src/components/ReactSingletonTest',
-  './ContentPicker': './src/components/ContentPicker',
-  './Breadcrumbs': './src/components/Breadcrumbs',
-  './NavigationService': './src/services/NavigationService',
+  './App': './src/App',
 };
 
 function ensureDir(dir) {
@@ -45,14 +32,14 @@ function ensureDir(dir) {
 }
 
 function getTypeFilePath(sourcePath) {
-  // Convert './src/components/Button' to 'components/Button.d.ts'
+  // Convert './src/App' to 'App.d.ts'
   const relativePath = sourcePath.replace('./src/', '');
-  return path.join(FEDERATION_DIR, `${relativePath}.d.ts`);
+  return path.join(TYPES_DIR, `${relativePath}.d.ts`);
 }
 
 function getModuleName(exposeName) {
-  // Convert './Button' to 'shared_components/Button'
-  return `shared_components${exposeName.replace('./', '/')}`;
+  // Convert './App' to 'reports_tab/App'
+  return `reports_tab${exposeName.replace('./', '/')}`;
 }
 
 function createModuleDeclaration(exposeName, sourcePath) {
@@ -71,7 +58,7 @@ function createModuleDeclaration(exposeName, sourcePath) {
 }
 
 function main() {
-  console.log('📦 Packaging Module Federation types...\n');
+  console.log('📦 Packaging Module Federation types for user-tab...\n');
 
   // Clean output directory
   if (fs.existsSync(OUTPUT_DIR)) {
@@ -120,10 +107,6 @@ function main() {
   console.log(`   ✅ ${successCount} modules packaged`);
   console.log(`   ❌ ${failCount} modules failed`);
   console.log(`\n✨ Types ready for CDN deployment!`);
-  console.log(`\n📤 Next steps:`);
-  console.log(`   1. Upload dist/@mf-types.zip to CDN/Artifactory`);
-  console.log(`   2. Consumers will fetch from: <CDN_URL>/@mf-types.zip`);
-  console.log(`   3. Consumers extract to @mf-types/ directory`);
 }
 
 main();

@@ -1,16 +1,6 @@
 #!/usr/bin/env node
 /**
- * Fetch Module Federation types from remote producers
- *
- * In production: Downloads @mf-types.zip from CDN/Artifactory
- * In development: Copies from local workspace packages
- *
- * This script simulates the type distribution flow:
- * 1. Producer builds and packages types to @mf-types.zip
- * 2. Producer uploads zip to CDN alongside remoteEntry.js
- * 3. Consumer downloads zip from CDN
- * 4. Consumer extracts to @mf-types/ directory
- * 5. TypeScript uses extracted declarations for type safety
+ * Fetch Module Federation types from multiple remote producers
  */
 
 const fs = require('fs');
@@ -19,11 +9,17 @@ const { execSync } = require('child_process');
 
 // Remote producers configuration
 const REMOTES = {
-  shared_components: {
-    // In production: 'https://cdn.example.com/shared-components/latest/@mf-types.zip'
-    // In development: Use local workspace package
-    zipPath: path.join(__dirname, '../../../shared-components/dist/@mf-types.zip'),
-    name: 'shared_components',
+  shared_data: {
+    zipPath: path.join(__dirname, '../../../shared-data/dist/@mf-types.zip'),
+    name: 'shared_data',
+  },
+  files_tab: {
+    zipPath: path.join(__dirname, '../../files-folders/dist/@mf-types.zip'),
+    name: 'files_tab',
+  },
+  hubs_tab: {
+    zipPath: path.join(__dirname, '../../../hubs-tab/dist/@mf-types.zip'),
+    name: 'hubs_tab',
   },
 };
 
@@ -36,72 +32,77 @@ function ensureDir(dir) {
   }
 }
 
-function fetchTypes(remote) {
-  console.log(`📥 Fetching types for ${remote.name}...`);
-
-  if (!fs.existsSync(remote.zipPath)) {
-    console.error(`❌ Type package not found: ${remote.zipPath}`);
-    console.error(`   Make sure to build the producer first:`);
-    console.error(`   cd shared-components && npm run build:prod`);
-    process.exit(1);
-  }
-
-  // Extract zip to project root
-  // Zip contains @mf-types/ at root, so extraction creates PROJECT_ROOT/@mf-types/
-  console.log(`📦 Extracting types...`);
-  try {
-    execSync(`unzip -o -q "${remote.zipPath}" -d "${PROJECT_ROOT}"`, { stdio: 'inherit' });
-    console.log(`✅ Extracted to: ${OUTPUT_DIR}/`);
-  } catch (error) {
-    console.error(`❌ Failed to extract zip:`, error.message);
-    process.exit(1);
-  }
-
-  // Verify extraction
-  const indexFile = path.join(OUTPUT_DIR, 'index.d.ts');
-
-  if (!fs.existsSync(indexFile)) {
-    console.error(`❌ Type declarations not found after extraction: ${indexFile}`);
-    process.exit(1);
-  }
-
-  const typeContent = fs.readFileSync(indexFile, 'utf-8');
-  const moduleCount = (typeContent.match(/declare module/g) || []).length;
-  console.log(`📝 Found ${moduleCount} module declarations`);
-
-  return { name: remote.name, moduleCount };
-}
-
 function main() {
-  console.log('🔍 Fetching Module Federation types...\n');
+  console.log('🔍 Fetching Module Federation types for content-platform/shell...\n');
 
   // Clean output directory
   if (fs.existsSync(OUTPUT_DIR)) {
     fs.rmSync(OUTPUT_DIR, { recursive: true });
   }
+  ensureDir(OUTPUT_DIR);
 
-  // Fetch types from all remotes
+  const allTypes = [];
   const results = [];
+
   Object.values(REMOTES).forEach((remote) => {
-    const result = fetchTypes(remote);
-    results.push(result);
+    if (!fs.existsSync(remote.zipPath)) {
+      console.log(`⚠️  Skipping ${remote.name} - types not built yet\n`);
+      results.push({ name: remote.name, moduleCount: 0, success: false });
+      return;
+    }
+
+    const tempDir = path.join(PROJECT_ROOT, `.temp-${remote.name}`);
+    ensureDir(tempDir);
+
+    try {
+      execSync(`unzip -o -q "${remote.zipPath}" -d "${tempDir}"`, { stdio: 'pipe' });
+      const typeFile = path.join(tempDir, '@mf-types', 'index.d.ts');
+
+      if (fs.existsSync(typeFile)) {
+        const content = fs.readFileSync(typeFile, 'utf-8');
+        allTypes.push(content);
+        const moduleCount = (content.match(/declare module/g) || []).length;
+        console.log(`✅ ${remote.name}: ${moduleCount} modules`);
+        results.push({ name: remote.name, moduleCount, success: true });
+      }
+
+      fs.rmSync(tempDir, { recursive: true });
+    } catch (error) {
+      console.error(`❌ ${remote.name}: Failed to extract`);
+      results.push({ name: remote.name, moduleCount: 0, success: false });
+      if (fs.existsSync(tempDir)) {
+        fs.rmSync(tempDir, { recursive: true });
+      }
+    }
+
     console.log('');
   });
 
-  // Summary
+  if (allTypes.length > 0) {
+    const mergedContent = allTypes.join('\n');
+    const outputFile = path.join(OUTPUT_DIR, 'index.d.ts');
+    ensureDir(OUTPUT_DIR);
+    fs.writeFileSync(outputFile, mergedContent, 'utf-8');
+
+    const srcOutputFile = path.join(PROJECT_ROOT, 'src', 'federated-types.d.ts');
+    fs.writeFileSync(srcOutputFile, mergedContent, 'utf-8');
+
+    console.log(`📝 Merged types written to:`);
+    console.log(`   ${outputFile}`);
+    console.log(`   ${srcOutputFile}\n`);
+  }
+
   console.log('📊 Summary:');
   results.forEach((result) => {
-    console.log(`   ✅ ${result.name}: ${result.moduleCount} modules`);
+    if (result.success) {
+      console.log(`   ✅ ${result.name}: ${result.moduleCount} modules`);
+    } else {
+      console.log(`   ⚠️  ${result.name}: not available`);
+    }
   });
 
-  console.log('\n✨ Type fetching complete!');
-  console.log('\n📤 Next steps:');
-  console.log('   1. TypeScript will use types from @mf-types/ directory');
-  console.log('   2. Run build to verify type safety: npm run build');
-  console.log('\n💡 Production deployment:');
-  console.log('   - Producer: Upload dist/@mf-types.zip to CDN');
-  console.log('   - Consumer: Update zipPath to CDN URL');
-  console.log('   - CI/CD: Run this script before build');
+  const successCount = results.filter(r => r.success).length;
+  console.log(`\n✨ Type fetching complete! (${successCount}/${results.length} remotes)`);
 }
 
 main();

@@ -8,7 +8,9 @@
     "prebuild:prod": "npm run fetch:types",
     "dev": "webpack serve --mode development",
     "build": "webpack --mode production",
-    "build:prod": "webpack --mode production"
+    "build:types": "tsc --emitDeclarationOnly --declaration",
+    "package:types": "node scripts/package-types.js",
+    "build:prod": "webpack --mode production && npm run build:types && npm run package:types"
   },
   "dependencies": {
     "react": "^18.2.0",

@@ -3,6 +3,11 @@ import filtersReducer from './slices/filtersSlice';
 import selectionReducer from './slices/selectionSlice';
 import navigationReducer from './slices/navigationSlice';
 
+// Re-export actions for external use
+export { setSearchText, setFilter, removeFilter, clearFilters, setDateRange, setContentType } from './slices/filtersSlice';
+export { selectItem, deselectItem, toggleSelection, selectAll, clearSelection, setSelectionType } from './slices/selectionSlice';
+export { navigate, setBreadcrumbs, setActiveTab, goBack } from './slices/navigationSlice';
+
 // Base reducer configuration
 const staticReducers = {
   filters: filtersReducer,
