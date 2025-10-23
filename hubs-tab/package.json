@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@modular-platform/shared-components": "*"
   },
   "devDependencies": {
     "@module-federation/enhanced": "^0.2.0",

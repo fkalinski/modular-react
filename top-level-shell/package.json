@@ -12,7 +12,12 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.0.4",
-    "@reduxjs/toolkit": "^2.0.1"
+    "@reduxjs/toolkit": "^2.0.1",
+    "@modular-platform/shared-components": "*",
+    "@modular-platform/shared-data": "*",
+    "@content-platform/shell": "*",
+    "@modular-platform/reports-tab": "*",
+    "@modular-platform/user-tab": "*"
   },
   "devDependencies": {
     "@module-federation/enhanced": "^0.2.0",

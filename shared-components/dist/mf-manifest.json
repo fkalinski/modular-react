@@ -16,8 +16,8 @@
     "types": {
       "path": "",
       "name": "",
-      "zip": "",
-      "api": ""
+      "zip": "@mf-types.zip",
+      "api": "@mf-types.d.ts"
     },
     "globalName": "shared_components",
     "pluginVersion": "0.2.8",
@@ -33,7 +33,7 @@
       "assets": {
         "js": {
           "async": [
-            "540.js"
+            "159.js"
           ],
           "sync": [
             "961.js"
@@ -55,7 +55,7 @@
         "js": {
           "async": [],
           "sync": [
-            "540.js"
+            "159.js"
           ]
         },
         "css": {
@@ -76,7 +76,7 @@
             "__federation_expose_Button.js"
           ],
           "async": [
-            "540.js"
+            "159.js"
           ]
         },
         "css": {
@@ -95,7 +95,7 @@
             "__federation_expose_Input.js"
           ],
           "async": [
-            "540.js"
+            "159.js"
           ]
         },
         "css": {
@@ -114,7 +114,7 @@
             "__federation_expose_Table.js"
           ],
           "async": [
-            "540.js"
+            "159.js"
           ]
         },
         "css": {
@@ -133,7 +133,7 @@
             "__federation_expose_Tree.js"
           ],
           "async": [
-            "540.js"
+            "159.js"
           ]
         },
         "css": {
@@ -152,7 +152,7 @@
             "__federation_expose_Layout.js"
           ],
           "async": [
-            "540.js"
+            "159.js"
           ]
         },
         "css": {
@@ -171,7 +171,7 @@
             "__federation_expose_Theme.js"
           ],
           "async": [
-            "540.js"
+            "159.js"
           ]
         },
         "css": {
@@ -180,6 +180,158 @@
         }
       },
       "path": "./Theme"
+    },
+    {
+      "id": "shared_components:Sidebar",
+      "name": "Sidebar",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Sidebar.js"
+          ],
+          "async": [
+            "159.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./Sidebar"
+    },
+    {
+      "id": "shared_components:TopBar",
+      "name": "TopBar",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_TopBar.js"
+          ],
+          "async": [
+            "159.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./TopBar"
+    },
+    {
+      "id": "shared_components:SearchBar",
+      "name": "SearchBar",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_SearchBar.js"
+          ],
+          "async": [
+            "159.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./SearchBar"
+    },
+    {
+      "id": "shared_components:FileIcon",
+      "name": "FileIcon",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_FileIcon.js"
+          ],
+          "async": [
+            "159.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./FileIcon"
+    },
+    {
+      "id": "shared_components:ReactSingletonTest",
+      "name": "ReactSingletonTest",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_ReactSingletonTest.js"
+          ],
+          "async": [
+            "159.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./ReactSingletonTest"
+    },
+    {
+      "id": "shared_components:ContentPicker",
+      "name": "ContentPicker",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_ContentPicker.js"
+          ],
+          "async": [
+            "159.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./ContentPicker"
+    },
+    {
+      "id": "shared_components:Breadcrumbs",
+      "name": "Breadcrumbs",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_Breadcrumbs.js"
+          ],
+          "async": [
+            "159.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./Breadcrumbs"
+    },
+    {
+      "id": "shared_components:NavigationService",
+      "name": "NavigationService",
+      "assets": {
+        "js": {
+          "sync": [
+            "__federation_expose_NavigationService.js"
+          ],
+          "async": [
+            "159.js"
+          ]
+        },
+        "css": {
+          "sync": [],
+          "async": []
+        }
+      },
+      "path": "./NavigationService"
     }
   ]
 }

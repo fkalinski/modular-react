@@ -12,7 +12,11 @@
     "react-dom": "^18.2.0",
     "react-redux": "^9.0.4",
     "@reduxjs/toolkit": "^2.0.1",
-    "@content-platform/tab-contract": "1.0.0"
+    "@content-platform/tab-contract": "1.0.0",
+    "@modular-platform/shared-components": "*",
+    "@modular-platform/shared-data": "*",
+    "@content-platform/files-folders": "*",
+    "hubs-tab": "*"
   },
   "devDependencies": {
     "@module-federation/enhanced": "^0.2.0",

@@ -7,4 +7,8 @@ export { Sidebar, type SidebarProps, type SidebarItem } from './components/Sideb
 export { TopBar, type TopBarProps } from './components/TopBar';
 export { SearchBar, type SearchBarProps, type SearchScope } from './components/SearchBar';
 export { FileIcon, type FileIconProps, type FileType, getFileTypeFromName } from './components/FileIcon';
+export { ReactSingletonTest } from './components/ReactSingletonTest';
+export { ContentPicker, type ContentPickerProps, type ContentLocation } from './components/ContentPicker';
+export { Breadcrumbs, type BreadcrumbsProps, type BreadcrumbItem } from './components/Breadcrumbs';
+export { NavigationProvider, useNavigation, NavigationLink, type NavigationContextValue, type NavigationProviderProps, type NavigationLinkProps, type NavigationTarget, } from './services/NavigationService';
 export { ThemeProvider, useTheme, type Theme, type ThemeProviderProps } from './theme/ThemeProvider';
