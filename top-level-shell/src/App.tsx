@@ -163,14 +163,14 @@ const App: React.FC = () => {
       <ThemeProvider>
         <NavigationProvider
           currentSection={activeTab}
-          onNavigate={(target) => setActiveTab(target as TabId)}
+          onNavigate={(target: TabId) => setActiveTab(target)}
         >
           <div style={appContainerStyles}>
           {/* Box design system - Dark sidebar navigation */}
           <Sidebar
             items={sidebarItems}
             activeId={activeTab}
-            onItemClick={(item) => setActiveTab(item.id as TabId)}
+            onItemClick={(item: { id: string }) => setActiveTab(item.id as TabId)}
           />
 
           {/* Main content area with TopBar */}

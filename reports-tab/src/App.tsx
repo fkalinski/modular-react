@@ -223,7 +223,7 @@ const ReportsApp: React.FC = () => {
                 selectedIds={selectedReports}
                 onSelectionChange={setSelectedReports}
                 showCheckboxes={true}
-                onRowClick={(report) => alert(`View report: ${report.name}`)}
+                onRowClick={(report: Report) => alert(`View report: ${report.name}`)}
               />
             </Suspense>
           </div>
