@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { usePlatform } from '@platform/context';
 import type { TabPlugin, ContentContext } from '@tab-contract';
 
 // Lazy load shared components
@@ -42,10 +43,28 @@ const ContentPlatform: React.FC = () => {
   const [activeTabId, setActiveTabId] = useState<string>('files');
   const [loadedTabs, setLoadedTabs] = useState<LoadedTab[]>([]);
 
-  // Get state from Redux (from shared-data)
-  const filters = useSelector((state: any) => state.filters || { active: [], searchText: '' });
-  const selection = useSelector((state: any) => state.selection || { selectedIds: [] });
-  const navigation = useSelector((state: any) => state.navigation || { currentPath: '/', breadcrumbs: [] });
+  // Get state from Platform Context
+  const platformContext = usePlatform();
+
+  // Fallback to Redux if Platform Context is not available (backwards compatibility)
+  const reduxFilters = useSelector((state: any) => state.filters || { active: [], searchText: '' });
+  const reduxSelection = useSelector((state: any) => state.selection || { selectedIds: [] });
+  const reduxNavigation = useSelector((state: any) => state.navigation || { currentPath: '/', breadcrumbs: [] });
+
+  // Use Platform Context if available, otherwise fallback to Redux
+  const filters = platformContext ? {
+    searchText: platformContext.search.query,
+    active: platformContext.search.filters,
+  } : reduxFilters;
+
+  const selection = platformContext ? {
+    selectedIds: platformContext.selection.selectedIds,
+  } : reduxSelection;
+
+  const navigation = platformContext ? {
+    currentPath: platformContext.navigation.currentPath,
+    breadcrumbs: platformContext.navigation.currentPath,
+  } : reduxNavigation;
 
   // Load tabs on mount
   useEffect(() => {
@@ -100,12 +119,22 @@ const ContentPlatform: React.FC = () => {
 
   const handleNavigate = (path: string) => {
     console.log('[ContentPlatform] Navigate to:', path);
-    // Dispatch navigation action
+    if (platformContext) {
+      platformContext.navigation.navigateTo({ id: path, path, label: path });
+    } else {
+      // Fallback to Redux dispatch if needed
+      console.log('[ContentPlatform] Navigation via Redux not implemented');
+    }
   };
 
   const handleSelect = (ids: string[]) => {
     console.log('[ContentPlatform] Select items:', ids);
-    // Dispatch selection action
+    if (platformContext) {
+      platformContext.selection.setSelection(ids);
+    } else {
+      // Fallback to Redux dispatch if needed
+      console.log('[ContentPlatform] Selection via Redux not implemented');
+    }
   };
 
   const activeTab = loadedTabs.find(t => t.plugin.config.id === activeTabId);

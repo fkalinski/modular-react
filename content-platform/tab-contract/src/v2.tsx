@@ -10,8 +10,8 @@
  * - Tabs can migrate incrementally
  */
 
-import { ComponentType } from 'react';
-import type { PlatformContextValue, Filter } from '@modular-platform/platform-context';
+import React, { ComponentType } from 'react';
+import type { PlatformContextValue, Filter } from '@platform/context';
 
 /**
  * Filter contribution from a tab

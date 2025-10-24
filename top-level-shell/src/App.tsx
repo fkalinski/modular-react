@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Provider, useDispatch } from 'react-redux';
+import { PlatformProvider } from '@platform/context';
 
 // Dynamic remote loader - loads at runtime with cookie/localStorage/URL override support
 // This enables testing different remote versions without rebuilding
@@ -28,6 +29,14 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 
 // Lazy load remote modules - Box design system components
 // Now using dynamic loader with cookie/localStorage/URL param override support
+const ErrorBoundary = lazy(() =>
+  loadRemote('shared_components', './ErrorBoundary')
+    .then((m: any) => ({ default: m.ErrorBoundary }))
+    .catch(() => ({
+      default: ({ children }: { children: React.ReactNode }) => <>{children}</>
+    }))
+);
+
 const ThemeProvider = lazy(() =>
   loadRemote('shared_components', './Theme')
     .then((m: any) => ({ default: m.ThemeProvider }))
@@ -292,15 +301,38 @@ const AppContent: React.FC = () => {
 
             {/* Content area */}
             <div style={contentAreaStyles}>
-              <Suspense
+              <ErrorBoundary
                 fallback={
-                  <div style={{ padding: '40px', textAlign: 'center', color: '#767676' }}>
-                    Loading {tabs.find(t => t.id === activeTab)?.label}...
+                  <div style={{ padding: '40px', textAlign: 'center', color: '#d32f2f' }}>
+                    <h3>Failed to load {tabs.find(t => t.id === activeTab)?.label}</h3>
+                    <p style={{ color: '#767676' }}>This module encountered an error and could not be displayed.</p>
+                    <button
+                      onClick={() => window.location.reload()}
+                      style={{
+                        padding: '8px 16px',
+                        marginTop: '16px',
+                        border: '1px solid #d32f2f',
+                        borderRadius: '4px',
+                        background: 'white',
+                        color: '#d32f2f',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Reload Page
+                    </button>
                   </div>
                 }
               >
-                <ActiveTabComponent />
-              </Suspense>
+                <Suspense
+                  fallback={
+                    <div style={{ padding: '40px', textAlign: 'center', color: '#767676' }}>
+                      Loading {tabs.find(t => t.id === activeTab)?.label}...
+                    </div>
+                  }
+                >
+                  <ActiveTabComponent />
+                </Suspense>
+              </ErrorBoundary>
             </div>
           </div>
         </div>
@@ -333,7 +365,9 @@ const App: React.FC = () => {
 
   return (
     <Provider store={store}>
-      <AppContent />
+      <PlatformProvider>
+        <AppContent />
+      </PlatformProvider>
     </Provider>
   );
 };
