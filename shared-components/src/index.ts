@@ -11,6 +11,9 @@ export { FileIcon, type FileIconProps, type FileType, getFileTypeFromName } from
 export { ReactSingletonTest } from './components/ReactSingletonTest';
 export { ContentPicker, type ContentPickerProps, type ContentLocation } from './components/ContentPicker';
 export { Breadcrumbs, type BreadcrumbsProps, type BreadcrumbItem } from './components/Breadcrumbs';
+export { Preview, type PreviewProps } from './components/Preview';
+export { HighlightText, type HighlightTextProps } from './components/HighlightText';
+export { type ContentItem } from './components/types';
 
 // Services
 export {

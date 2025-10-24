@@ -45,12 +45,15 @@ export interface TableProps<T> {
     onRowClick?: (item: T) => void;
     selectedIds?: string[];
     onSelectionChange?: (ids: string[]) => void;
+    activeRowId?: string;
+    onActiveRowChange?: (rowId: string | undefined) => void;
     idKey?: keyof T;
     showCheckboxes?: boolean;
     showActions?: boolean;
     onActionClick?: (item: T) => void;
+    enableKeyboardNav?: boolean;
 }
-export declare function Table<T extends Record<string, any>>({ columns, data, onRowClick, selectedIds, onSelectionChange, idKey, showCheckboxes, showActions, onActionClick, }: TableProps<T>): import("react/jsx-runtime").JSX.Element;
+export declare function Table<T extends Record<string, any>>({ columns, data, onRowClick, selectedIds, onSelectionChange, activeRowId, onActiveRowChange, idKey, showCheckboxes, showActions, onActionClick, enableKeyboardNav, }: TableProps<T>): import("react/jsx-runtime").JSX.Element;
 export default Table;
 
 }
@@ -428,6 +431,48 @@ export interface NavigationLinkProps {
 }
 export declare const NavigationLink: React.FC<NavigationLinkProps>;
 export default NavigationProvider;
+
+}
+
+declare module 'shared_components/Preview' {
+import React from 'react';
+
+export interface ContentItem {
+  id: string;
+  name: string;
+  type: string;
+  ownerId: string;
+  owner?: string;
+  size?: string | number;
+  createdAt: string;
+  updatedAt: string;
+  mimeType?: string;
+  [key: string]: any;
+}
+
+export interface PreviewProps {
+  isOpen: boolean;
+  onClose: () => void;
+  item: ContentItem | null;
+  onNavigateToOwner?: (ownerId: string) => void;
+}
+
+export declare const Preview: React.FC<PreviewProps>;
+export default Preview;
+
+}
+
+declare module 'shared_components/HighlightText' {
+import React from 'react';
+
+export interface HighlightTextProps {
+  text: string;
+  highlight: string;
+  caseSensitive?: boolean;
+}
+
+export declare const HighlightText: React.FC<HighlightTextProps>;
+export default HighlightText;
 
 }
 

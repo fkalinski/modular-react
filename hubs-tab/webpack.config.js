@@ -1,8 +1,15 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
+const packageJson = require('./package.json');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
+
+  // Get remote URLs from environment variables or use defaults
+  const getRemoteUrl = (name, defaultUrl) => {
+    const envVar = `REMOTE_${name.toUpperCase()}_URL`;
+    return process.env[envVar] || defaultUrl;
+  };
 
   return {
     entry: './src/index.tsx',
@@ -40,12 +47,12 @@ module.exports = (env, argv) => {
         },
         remotes: {
           shared_components: isProduction
-            ? 'shared_components@https://cdn.example.com/shared-components/remoteEntry.js'
+            ? `shared_components@${getRemoteUrl('shared_components', 'https://shared-components.vercel.app')}/remoteEntry.js`
             : 'shared_components@http://localhost:3001/remoteEntry.js',
         },
         shared: {
-          react: { singleton: true, requiredVersion: '^18.0.0' },
-          'react-dom': { singleton: true, requiredVersion: '^18.0.0' },
+          react: { singleton: true, requiredVersion: packageJson.dependencies.react, strictVersion: false },
+          'react-dom': { singleton: true, requiredVersion: packageJson.dependencies['react-dom'], strictVersion: false },
         },
         shareStrategy: 'version-first',
         dts: {

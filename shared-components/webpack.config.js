@@ -63,6 +63,8 @@ module.exports = (env, argv) => {
           './ContentPicker': './src/components/ContentPicker',
           './Breadcrumbs': './src/components/Breadcrumbs',
           './NavigationService': './src/services/NavigationService',
+          './Preview': './src/components/Preview',
+          './HighlightText': './src/components/HighlightText',
         },
         shared: {
           react: {
@@ -78,9 +80,7 @@ module.exports = (env, argv) => {
         },
         // Module Federation 2.0 features
         shareStrategy: 'version-first',
-        dts: {
-          generateTypes: true,
-        },
+        dts: false, // Disabled temporarily for dev server stability
       }),
       new HtmlWebpackPlugin({
         template: './public/index.html',

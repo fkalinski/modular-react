@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
+import { Provider, useDispatch } from 'react-redux';
 
 // Lazy load remote modules - Box design system components
 // Add error handling for graceful fallback if shared_components remote fails
@@ -98,7 +99,9 @@ const updateUrlParams = (tab: TabId, search: string) => {
   window.history.pushState({}, '', newUrl);
 };
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const dispatch = useDispatch();
+
   // Initialize from URL params
   const urlParams = getUrlParams();
   const [activeTab, setActiveTab] = useState<TabId>(urlParams.tab);
@@ -108,6 +111,19 @@ const App: React.FC = () => {
   useEffect(() => {
     updateUrlParams(activeTab, searchValue);
   }, [activeTab, searchValue]);
+
+  // Dispatch search to Redux store
+  useEffect(() => {
+    const dispatchSearch = async () => {
+      try {
+        const { setSearchText } = await import('shared_data/store');
+        dispatch(setSearchText(searchValue));
+      } catch (error) {
+        console.error('Failed to dispatch search:', error);
+      }
+    };
+    dispatchSearch();
+  }, [searchValue, dispatch]);
 
   // Handle browser back/forward
   useEffect(() => {
@@ -257,6 +273,33 @@ const App: React.FC = () => {
         </NavigationProvider>
       </ThemeProvider>
     </Suspense>
+  );
+};
+
+// Wrapper to provide Redux store
+const App: React.FC = () => {
+  const [store, setStore] = useState<any>(null);
+
+  useEffect(() => {
+    const initStore = async () => {
+      try {
+        const { createStore } = await import('shared_data/store');
+        setStore(createStore());
+      } catch (error) {
+        console.error('Failed to initialize store:', error);
+      }
+    };
+    initStore();
+  }, []);
+
+  if (!store) {
+    return <div style={{ padding: '20px', textAlign: 'center' }}>Initializing...</div>;
+  }
+
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
   );
 };
 

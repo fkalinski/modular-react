@@ -68,6 +68,8 @@ export interface ContentItem {
   id: string;
   name: string;
   type: string;
+  ownerId: string;
+  owner?: string;
   createdAt: string;
   updatedAt: string;
   [key: string]: any; // Allow extensions

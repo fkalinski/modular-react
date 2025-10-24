@@ -1,5 +1,9 @@
 import React, { Suspense, lazy, useState, useEffect, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import type { TabPlugin, TabProps, ContentItem } from '@tab-contract';
+
+// Import Redux action for clearing search
+const setSearchTextModule = import('shared_data/store');
 
 // Lazy load shared components
 const Tree = lazy(() => import('shared_components/Tree').then(m => ({ default: m.Tree })));
@@ -7,68 +11,201 @@ const Table = lazy(() => import('shared_components/Table').then(m => ({ default:
 const Button = lazy(() => import('shared_components/Button').then(m => ({ default: m.Button })));
 const FileIcon = lazy(() => import('shared_components/FileIcon').then(m => ({ default: m.FileIcon, getFileTypeFromName: m.getFileTypeFromName })));
 const ContentPicker = lazy(() => import('shared_components/ContentPicker').then(m => ({ default: m.ContentPicker })));
-const NavigationLink = lazy(() => import('shared_components/NavigationService').then(m => ({ default: m.NavigationLink })));
 const Breadcrumbs = lazy(() => import('shared_components/Breadcrumbs').then(m => ({ default: m.Breadcrumbs })));
+const Preview = lazy(() => import('shared_components/Preview').then(m => ({ default: m.Preview })));
+const HighlightText = lazy(() => import('shared_components/HighlightText').then(m => ({ default: m.HighlightText })));
+
+// Import navigation service components/hooks
+const NavigationLink = lazy(() => import('shared_components/NavigationService').then(m => ({ default: m.NavigationLink })));
+const NavigationServiceModule = import('shared_components/NavigationService');
 
 // Mock data for demonstration
 const mockFolderTree = [
   {
-    id: 'root',
-    label: 'My Documents',
-    icon: '📁',
+    id: 'user-john',
+    label: 'John Doe',
+    icon: '👤',
     children: [
       {
-        id: 'work',
+        id: 'john-work',
         label: 'Work',
         icon: '📁',
         children: [
-          { id: 'work-1', label: 'Projects', icon: '📁' },
-          { id: 'work-2', label: 'Reports', icon: '📁' },
+          { id: 'john-work-projects', label: 'Projects', icon: '📁' },
+          { id: 'john-work-reports', label: 'Reports', icon: '📁' },
         ],
       },
       {
-        id: 'personal',
+        id: 'john-personal',
         label: 'Personal',
         icon: '📁',
         children: [
-          { id: 'personal-1', label: 'Photos', icon: '📁' },
-          { id: 'personal-2', label: 'Documents', icon: '📁' },
+          { id: 'john-personal-photos', label: 'Photos', icon: '📁' },
+          { id: 'john-personal-docs', label: 'Documents', icon: '📁' },
         ],
+      },
+    ],
+  },
+  {
+    id: 'user-jane',
+    label: 'Jane Smith',
+    icon: '👤',
+    children: [
+      {
+        id: 'jane-projects',
+        label: 'Projects',
+        icon: '📁',
+        children: [
+          { id: 'jane-projects-2024', label: '2024', icon: '📁' },
+          { id: 'jane-projects-archive', label: 'Archive', icon: '📁' },
+        ],
+      },
+      {
+        id: 'jane-documents',
+        label: 'Documents',
+        icon: '📁',
+      },
+    ],
+  },
+  {
+    id: 'user-bob',
+    label: 'Bob Johnson',
+    icon: '👤',
+    children: [
+      {
+        id: 'bob-shared',
+        label: 'Shared',
+        icon: '📁',
       },
     ],
   },
 ];
 
 const mockFiles: ContentItem[] = [
-  { id: 'f1', name: 'Project Proposal.docx', type: 'file', size: '2.5 MB', createdAt: '2024-01-15', updatedAt: '2024-01-15', mimeType: 'application/docx' },
-  { id: 'f2', name: 'Budget 2024.xlsx', type: 'file', size: '1.2 MB', createdAt: '2024-01-14', updatedAt: '2024-01-16', mimeType: 'application/xlsx' },
-  { id: 'f3', name: 'Meeting Notes.txt', type: 'file', size: '45 KB', createdAt: '2024-01-13', updatedAt: '2024-01-17', mimeType: 'text/plain' },
-  { id: 'f4', name: 'Presentation.pptx', type: 'file', size: '8.3 MB', createdAt: '2024-01-12', updatedAt: '2024-01-18', mimeType: 'application/pptx' },
+  { id: 'f1', name: 'Project Proposal.docx', type: 'file', size: '2.5 MB', ownerId: 'user-john', owner: 'John Doe', folderId: 'john-work-projects', path: 'user-john/john-work/john-work-projects', createdAt: '2024-01-15', updatedAt: '2024-01-15', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' },
+  { id: 'f2', name: 'Budget 2024.xlsx', type: 'file', size: '1.2 MB', ownerId: 'user-jane', owner: 'Jane Smith', folderId: 'jane-projects-2024', path: 'user-jane/jane-projects/jane-projects-2024', createdAt: '2024-01-14', updatedAt: '2024-01-16', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+  { id: 'f3', name: 'Meeting Notes.txt', type: 'file', size: '45 KB', ownerId: 'user-john', owner: 'John Doe', folderId: 'john-work-reports', path: 'user-john/john-work/john-work-reports', createdAt: '2024-01-13', updatedAt: '2024-01-17', mimeType: 'text/plain' },
+  { id: 'f4', name: 'Presentation.pptx', type: 'file', size: '8.3 MB', ownerId: 'user-bob', owner: 'Bob Johnson', folderId: 'bob-shared', path: 'user-bob/bob-shared', createdAt: '2024-01-12', updatedAt: '2024-01-18', mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' },
+  { id: 'f5', name: 'Design Specs.pdf', type: 'file', size: '3.1 MB', ownerId: 'user-jane', owner: 'Jane Smith', folderId: 'jane-documents', path: 'user-jane/jane-documents', createdAt: '2024-01-11', updatedAt: '2024-01-15', mimeType: 'application/pdf' },
+  { id: 'f6', name: 'Team Photo.jpg', type: 'file', size: '2.8 MB', ownerId: 'user-bob', owner: 'Bob Johnson', folderId: 'bob-shared', path: 'user-bob/bob-shared', createdAt: '2024-01-10', updatedAt: '2024-01-10', mimeType: 'image/jpeg' },
+  { id: 'f7', name: 'Q1 Report.pdf', type: 'file', size: '1.5 MB', ownerId: 'user-john', owner: 'John Doe', folderId: 'john-personal-docs', path: 'user-john/john-personal/john-personal-docs', createdAt: '2024-01-09', updatedAt: '2024-01-16', mimeType: 'application/pdf' },
+  { id: 'f8', name: 'Vacation.jpg', type: 'file', size: '4.2 MB', ownerId: 'user-john', owner: 'John Doe', folderId: 'john-personal-photos', path: 'user-john/john-personal/john-personal-photos', createdAt: '2024-01-08', updatedAt: '2024-01-08', mimeType: 'image/jpeg' },
 ];
 
 // Tab component implementation
 const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }) => {
-  const [selectedFolder, setSelectedFolder] = useState<string>('root');
+  const dispatch = useDispatch();
+  const [selectedFolder, setSelectedFolder] = useState<string>('user-john');
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [activeRowId, setActiveRowId] = useState<string | undefined>(undefined);
+  const [previewItem, setPreviewItem] = useState<ContentItem | null>(null);
   const [files, setFiles] = useState<ContentItem[]>(mockFiles);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [breadcrumbPath, setBreadcrumbPath] = useState([
     { id: 'content', label: 'Content', icon: '📁' },
     { id: 'files', label: 'Files & Folders', icon: '📂' },
-    { id: 'root', label: 'My Documents', icon: '📁' },
+    { id: 'user-john', label: 'John Doe', icon: '👤' },
   ]);
+
+  // Track if in search mode
+  const isSearchMode = Boolean(context.filters.searchText && context.filters.searchText.trim());
+
+  // Helper function to get files for a folder (including children)
+  const getFilesForFolder = (folderId: string): ContentItem[] => {
+    return mockFiles.filter(file => {
+      // Match exact folder or any parent folder in the path
+      return file.folderId === folderId || file.path?.startsWith(folderId.replace(/-/g, '/'));
+    });
+  };
 
   // React to context changes (filters)
   useEffect(() => {
     if (context.filters.searchText) {
+      // Search mode: show all matching files across all folders
       const filtered = mockFiles.filter(f =>
         f.name.toLowerCase().includes(context.filters.searchText.toLowerCase())
       );
       setFiles(filtered);
     } else {
-      setFiles(mockFiles);
+      // Normal mode: show files for selected folder
+      const folderFiles = getFilesForFolder(selectedFolder);
+      setFiles(folderFiles);
     }
-  }, [context.filters.searchText]);
+  }, [context.filters.searchText, selectedFolder]);
+
+  // Helper function to build full breadcrumb path by traversing tree
+  const buildBreadcrumbPath = (nodeId: string, tree: any[]): Array<{id: string, label: string, icon: string}> => {
+    const basePath = [
+      { id: 'content', label: 'Content', icon: '📁' },
+      { id: 'files', label: 'Files & Folders', icon: '📂' },
+    ];
+
+    // Recursive function to find node and build path
+    const findNodePath = (nodes: any[], targetId: string, currentPath: any[] = []): any[] | null => {
+      for (const node of nodes) {
+        const newPath = [...currentPath, { id: node.id, label: node.label, icon: node.icon }];
+
+        if (node.id === targetId) {
+          return newPath;
+        }
+
+        if (node.children) {
+          const found = findNodePath(node.children, targetId, newPath);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const nodePath = findNodePath(tree, nodeId);
+    return nodePath ? [...basePath, ...nodePath] : basePath;
+  };
+
+  // Helper function to get breadcrumb data for a file based on its path
+  const getFileBreadcrumbPath = (file: ContentItem): Array<{id: string, label: string, icon: string}> => {
+    if (!file.path) return [];
+
+    const pathSegments = file.path.split('/');
+    const breadcrumbs: Array<{id: string, label: string, icon: string}> = [];
+
+    // Build breadcrumbs by looking up each segment in the tree
+    const findNodeById = (nodes: any[], id: string): any => {
+      for (const node of nodes) {
+        if (node.id === id) return node;
+        if (node.children) {
+          const found = findNodeById(node.children, id);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    pathSegments.forEach((segmentId: string) => {
+      const node = findNodeById(mockFolderTree, segmentId);
+      if (node) {
+        breadcrumbs.push({ id: node.id, label: node.label, icon: node.icon });
+      }
+    });
+
+    return breadcrumbs;
+  };
+
+  // Handler for breadcrumb navigation - clears search and navigates to folder
+  const handleBreadcrumbClick = async (folderId: string) => {
+    try {
+      // Clear search filter
+      const { setSearchText } = await setSearchTextModule;
+      dispatch(setSearchText(''));
+
+      // Navigate to the folder
+      setSelectedFolder(folderId);
+      const newPath = buildBreadcrumbPath(folderId, mockFolderTree);
+      setBreadcrumbPath(newPath);
+      onNavigate(folderId);
+    } catch (error) {
+      console.error('Failed to clear search:', error);
+    }
+  };
 
   // Memoize locations to prevent unnecessary re-renders of ContentPicker
   const pickerLocations = useMemo(() => {
@@ -96,37 +233,39 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
     setSelectedFolder(node.id);
     onNavigate(node.id);
 
-    // Update breadcrumbs based on selected folder
-    if (node.id === 'root') {
-      setBreadcrumbPath([
-        { id: 'content', label: 'Content', icon: '📁' },
-        { id: 'files', label: 'Files & Folders', icon: '📂' },
-        { id: 'root', label: 'My Documents', icon: '📁' },
-      ]);
-    } else if (node.id === 'work') {
-      setBreadcrumbPath([
-        { id: 'content', label: 'Content', icon: '📁' },
-        { id: 'files', label: 'Files & Folders', icon: '📂' },
-        { id: 'root', label: 'My Documents', icon: '📁' },
-        { id: 'work', label: 'Work', icon: '📁' },
-      ]);
-    } else if (node.id === 'personal') {
-      setBreadcrumbPath([
-        { id: 'content', label: 'Content', icon: '📁' },
-        { id: 'files', label: 'Files & Folders', icon: '📂' },
-        { id: 'root', label: 'My Documents', icon: '📁' },
-        { id: 'personal', label: 'Personal', icon: '📁' },
-      ]);
-    }
+    // Build proper breadcrumb path using tree traversal
+    const newBreadcrumbPath = buildBreadcrumbPath(node.id, mockFolderTree);
+    setBreadcrumbPath(newBreadcrumbPath);
+
+    // Files will be updated by useEffect watching selectedFolder
   };
 
   const handleFileClick = (file: ContentItem) => {
-    const newSelection = selectedFiles.includes(file.id)
-      ? selectedFiles.filter(id => id !== file.id)
-      : [...selectedFiles, file.id];
+    // Set active row and open preview
+    setActiveRowId(file.id);
+    setPreviewItem(file);
+    onSelect([file.id]);
+  };
 
-    setSelectedFiles(newSelection);
-    onSelect(newSelection);
+  const handleOwnerClick = async (ownerId: string) => {
+    // Navigate to user page using navigation service
+    try {
+      const { useNavigation } = await NavigationServiceModule;
+      // Since we can't use hooks dynamically, we'll emit a navigation event
+      // In a real app with proper routing, this would navigate to /users/:id
+      console.log('[Navigation] Navigating to user:', ownerId);
+
+      // For demo, dispatch a custom event that the shell can listen to
+      window.dispatchEvent(new CustomEvent('navigate', {
+        detail: { target: 'user', params: { userId: ownerId } }
+      }));
+
+      // Also show feedback
+      alert(`Navigation event dispatched for user: ${ownerId}\n\nIn production, this would navigate to the user profile tab.`);
+    } catch (error) {
+      console.error('Navigation service not available:', error);
+      alert(`Navigating to user profile: ${ownerId}`);
+    }
   };
 
   // Box design system - Two-column layout
@@ -199,30 +338,31 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
         <Breadcrumbs
           items={breadcrumbPath}
           onItemClick={(item) => {
-            if (item.id === 'files') {
-              setBreadcrumbPath([
-                { id: 'content', label: 'Content', icon: '📁' },
-                { id: 'files', label: 'Files & Folders', icon: '📂' },
-                { id: 'root', label: 'My Documents', icon: '📁' },
-              ]);
-              setSelectedFolder('root');
+            // Skip navigation for base items (content, files)
+            if (item.id === 'content' || item.id === 'files') {
+              return;
             }
+
+            // Navigate to the clicked folder and clear search if active
+            handleBreadcrumbClick(item.id);
           }}
         />
       </Suspense>
 
       <div style={containerStyles}>
-        {/* Left Panel - Folder Tree */}
-        <div style={leftPanelStyles}>
-          <Tree
-            nodes={mockFolderTree}
-            onNodeClick={handleFolderSelect}
-            selectedId={selectedFolder}
-          />
-        </div>
+        {/* Left Panel - Folder Tree (hidden in search mode) */}
+        {!isSearchMode && (
+          <div style={leftPanelStyles}>
+            <Tree
+              nodes={mockFolderTree}
+              onNodeClick={handleFolderSelect}
+              selectedId={selectedFolder}
+            />
+          </div>
+        )}
 
         {/* Right Panel - Files Table */}
-        <div style={rightPanelStyles}>
+        <div style={{...rightPanelStyles, marginLeft: isSearchMode ? 0 : undefined}}>
           {/* Toolbar */}
           <div style={toolbarStyles}>
             <div style={toolbarLeftStyles}>
@@ -281,28 +421,102 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
                 {
                   key: 'name',
                   header: 'Name',
-                  width: '45%',
+                  width: isSearchMode ? '35%' : '40%',
                   render: (file) => {
+                    const item = file as ContentItem;
                     return (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Suspense fallback={<span>📄</span>}>
-                          <FileIcon type="file" size={20} />
-                        </Suspense>
-                        <span>{(file as ContentItem).name}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <Suspense fallback={<span>📄</span>}>
+                            <FileIcon type="file" size={20} />
+                          </Suspense>
+                          {isSearchMode && context.filters.searchText ? (
+                            <Suspense fallback={<span>{item.name}</span>}>
+                              <HighlightText text={item.name} highlight={context.filters.searchText} />
+                            </Suspense>
+                          ) : (
+                            <span>{item.name}</span>
+                          )}
+                        </div>
+                        {isSearchMode && item.path && (
+                          <div style={{ fontSize: '11px', color: '#767676', paddingLeft: '28px' }}>
+                            {getFileBreadcrumbPath(item).map((crumb, index, arr) => (
+                              <React.Fragment key={crumb.id}>
+                                <a
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleBreadcrumbClick(crumb.id);
+                                  }}
+                                  style={{
+                                    color: '#0061d5',
+                                    textDecoration: 'none',
+                                    cursor: 'pointer',
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.textDecoration = 'underline';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.textDecoration = 'none';
+                                  }}
+                                >
+                                  {crumb.label}
+                                </a>
+                                {index < arr.length - 1 && <span> &gt; </span>}
+                              </React.Fragment>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     );
                   },
                 },
-                { key: 'size', header: 'Size', width: '15%' },
-                { key: 'mimeType', header: 'Type', width: '20%' },
-                { key: 'updatedAt', header: 'Modified', width: '20%' },
+                {
+                  key: 'owner',
+                  header: 'Owner',
+                  width: '15%',
+                  render: (file) => {
+                    const item = file as ContentItem;
+                    return item.owner ? (
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleOwnerClick(item.ownerId);
+                        }}
+                        style={{
+                          color: '#0061d5',
+                          textDecoration: 'none',
+                          cursor: 'pointer',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.textDecoration = 'underline';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.textDecoration = 'none';
+                        }}
+                      >
+                        {item.owner}
+                      </a>
+                    ) : null;
+                  },
+                },
+                { key: 'size', header: 'Size', width: isSearchMode ? '12%' : '13%' },
+                { key: 'mimeType', header: 'Type', width: isSearchMode ? '18%' : '17%' },
+                { key: 'updatedAt', header: 'Modified', width: '15%' },
               ]}
               data={files}
               selectedIds={selectedFiles}
               onSelectionChange={setSelectedFiles}
+              activeRowId={activeRowId}
+              onActiveRowChange={setActiveRowId}
+              onRowClick={(item) => handleFileClick(item as ContentItem)}
               showCheckboxes={true}
               showActions={true}
-              onActionClick={(file) => alert(`Actions for ${file.name}`)}
+              onActionClick={(file) => alert(`Actions for ${(file as ContentItem).name}`)}
+              enableKeyboardNav={true}
             />
           </div>
         </div>
@@ -349,6 +563,19 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
           </Suspense>
         </div>
       )}
+
+      {/* Preview Component */}
+      <Suspense fallback={null}>
+        <Preview
+          isOpen={previewItem !== null}
+          onClose={() => {
+            setPreviewItem(null);
+            setActiveRowId(undefined);
+          }}
+          item={previewItem}
+          onNavigateToOwner={handleOwnerClick}
+        />
+      </Suspense>
     </Suspense>
   );
 };

@@ -41,7 +41,6 @@ const ContentPlatform: React.FC = () => {
   const dispatch = useDispatch();
   const [activeTabId, setActiveTabId] = useState<string>('files');
   const [loadedTabs, setLoadedTabs] = useState<LoadedTab[]>([]);
-  const [searchText, setSearchText] = useState('');
 
   // Get state from Redux (from shared-data)
   const filters = useSelector((state: any) => state.filters || { active: [], searchText: '' });
@@ -84,7 +83,7 @@ const ContentPlatform: React.FC = () => {
   // Create context to pass to tabs
   const contentContext: ContentContext = {
     filters: {
-      searchText: filters.searchText || searchText,
+      searchText: filters.searchText || '',
       active: filters.active || [],
       dateRange: filters.dateRange,
       contentType: filters.contentType,
@@ -107,14 +106,6 @@ const ContentPlatform: React.FC = () => {
   const handleSelect = (ids: string[]) => {
     console.log('[ContentPlatform] Select items:', ids);
     // Dispatch selection action
-  };
-
-  const handleSearch = async () => {
-    console.log('[ContentPlatform] Search:', searchText);
-    // Dynamically import and dispatch action from shared-data
-    // This pattern avoids TypeScript re-export resolution issues in Module Federation
-    const { setSearchText } = await import('shared_data/store');
-    dispatch(setSearchText(searchText));
   };
 
   const activeTab = loadedTabs.find(t => t.plugin.config.id === activeTabId);
