@@ -16,6 +16,14 @@ build/
 .next/
 out/
 
+# TypeScript build artifacts in source directories
+# Only exclude .js and .d.ts files in src/ that have corresponding .tsx files
+**/src/**/*.d.ts
+**/src/**/*.js
+!**/src/**/*.config.js
+!**/src/**/*.spec.js
+!**/src/**/*.test.js
+
 # Environment variables
 .env
 .env.local
