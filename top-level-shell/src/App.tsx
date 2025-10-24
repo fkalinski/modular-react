@@ -1,11 +1,56 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 
 // Lazy load remote modules - Box design system components
-const ThemeProvider = lazy(() => import('shared_components/Theme').then(m => ({ default: m.ThemeProvider })));
-const Sidebar = lazy(() => import('shared_components/Sidebar').then(m => ({ default: m.Sidebar })));
-const TopBar = lazy(() => import('shared_components/TopBar').then(m => ({ default: m.TopBar })));
-const SearchBar = lazy(() => import('shared_components/SearchBar').then(m => ({ default: m.SearchBar })));
-const NavigationProvider = lazy(() => import('shared_components/NavigationService').then(m => ({ default: m.NavigationProvider })));
+// Add error handling for graceful fallback if shared_components remote fails
+const ThemeProvider = lazy(() =>
+  import('shared_components/Theme')
+    .then(m => ({ default: m.ThemeProvider }))
+    .catch(() => ({
+      default: ({ children }: { children: React.ReactNode }) => <>{children}</>
+    }))
+);
+
+const Sidebar = lazy(() =>
+  import('shared_components/Sidebar')
+    .then(m => ({ default: m.Sidebar }))
+    .catch(() => ({
+      default: () => <div style={{ width: '60px', height: '100vh', background: '#000' }} />
+    }))
+);
+
+const TopBar = lazy(() =>
+  import('shared_components/TopBar')
+    .then(m => ({ default: m.TopBar }))
+    .catch(() => ({
+      default: () => <div style={{ height: '56px', borderBottom: '1px solid #e2e2e2', padding: '12px' }}>
+        <div style={{ color: '#999' }}>TopBar unavailable</div>
+      </div>
+    }))
+);
+
+const SearchBar = lazy(() =>
+  import('shared_components/SearchBar')
+    .then(m => ({ default: m.SearchBar }))
+    .catch(() => ({
+      default: ({ value, onChange, placeholder }: any) => (
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          style={{ padding: '8px', border: '1px solid #d3d3d3', borderRadius: '4px', width: '300px' }}
+        />
+      )
+    }))
+);
+
+const NavigationProvider = lazy(() =>
+  import('shared_components/NavigationService')
+    .then(m => ({ default: m.NavigationProvider }))
+    .catch(() => ({
+      default: ({ children }: { children: React.ReactNode }) => <>{children}</>
+    }))
+);
 
 // Lazy load tabs
 const ContentShell = lazy(() => import('content_shell/ContentPlatform').catch(() => ({

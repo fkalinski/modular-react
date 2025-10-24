@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 export interface ContentLocation {
   id: string;
@@ -54,18 +54,35 @@ export const ContentPicker: React.FC<ContentPickerProps> = ({
   locations,
   multiSelect = false,
   allowedTypes,
-  selectedIds = [],
+  selectedIds,
   searchable = true,
   confirmLabel = 'Select',
   cancelLabel = 'Cancel',
 }) => {
-  const [selectedSet, setSelectedSet] = useState<Set<string>>(new Set(selectedIds));
+  // Create stable default to prevent infinite loop when prop is undefined
+  const stableDefaultIds = useMemo(() => [], []);
+  const effectiveSelectedIds = selectedIds ?? stableDefaultIds;
+
+  const [selectedSet, setSelectedSet] = useState<Set<string>>(new Set(effectiveSelectedIds));
   const [expandedSet, setExpandedSet] = useState<Set<string>>(new Set());
   const [searchText, setSearchText] = useState('');
 
+  // Track previous selectedIds to prevent infinite loop from array reference changes
+  const prevSelectedIdsRef = useRef<string[]>(effectiveSelectedIds);
+
   useEffect(() => {
-    setSelectedSet(new Set(selectedIds));
-  }, [selectedIds]);
+    // Only update if array contents actually changed, not just reference
+    const prevIds = prevSelectedIdsRef.current;
+    const currentIds = effectiveSelectedIds;
+
+    if (
+      prevIds.length !== currentIds.length ||
+      !prevIds.every((id, index) => id === currentIds[index])
+    ) {
+      setSelectedSet(new Set(currentIds));
+      prevSelectedIdsRef.current = currentIds;
+    }
+  }, [effectiveSelectedIds]);
 
   useEffect(() => {
     if (!isOpen) {

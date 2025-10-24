@@ -199,7 +199,7 @@ const UserApp: React.FC = () => {
                 />
                 <Input
                   label="Phone Number"
-                  type="tel"
+                  type="text"
                   value={phone}
                   onChange={setPhone}
                   placeholder="Enter your phone"
