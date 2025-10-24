@@ -21,7 +21,7 @@
     },
     "globalName": "shared_components",
     "pluginVersion": "0.2.8",
-    "publicPath": "auto"
+    "publicPath": "http://localhost:3001/"
   },
   "shared": [
     {
@@ -35,10 +35,10 @@
       "assets": {
         "js": {
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ],
           "sync": [
-            "961.js"
+            "vendors-node_modules_react-dom_index_js.js"
           ]
         },
         "css": {
@@ -60,7 +60,7 @@
         "js": {
           "async": [],
           "sync": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -77,8 +77,8 @@
         "./Table",
         "./TopBar",
         "./Tree",
-        "./Theme",
-        "./NavigationService"
+        "./NavigationService",
+        "./Theme"
       ]
     }
   ],
@@ -93,10 +93,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_Button.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -116,10 +117,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_Input.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -139,10 +141,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_Table.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -162,10 +165,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_Tree.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -183,10 +187,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_Layout.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -206,10 +211,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_Theme.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -229,10 +235,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_Sidebar.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -252,10 +259,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_TopBar.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -275,10 +283,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_SearchBar.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -296,10 +305,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_FileIcon.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -319,10 +329,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_ReactSingletonTest.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -342,10 +353,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_ContentPicker.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -363,10 +375,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_Breadcrumbs.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
@@ -386,10 +399,11 @@
       "assets": {
         "js": {
           "sync": [
+            "vendors-node_modules_react_jsx-runtime_js.js",
             "__federation_expose_NavigationService.js"
           ],
           "async": [
-            "159.js"
+            "vendors-node_modules_react_index_js.js"
           ]
         },
         "css": {
