@@ -163,7 +163,11 @@ const App: React.FC = () => {
       <ThemeProvider>
         <NavigationProvider
           currentSection={activeTab}
-          onNavigate={(target: TabId) => setActiveTab(target)}
+          onNavigate={(target) => {
+            if (target === 'content' || target === 'reports' || target === 'user') {
+              setActiveTab(target);
+            }
+          }}
         >
           <div style={appContainerStyles}>
           {/* Box design system - Dark sidebar navigation */}
