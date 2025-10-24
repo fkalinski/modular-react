@@ -49,22 +49,14 @@ module.exports = (env, argv) => {
     plugins: [
       new ModuleFederationPlugin({
         name: 'top_level_shell',
+        // Use dynamic remotes to enable runtime URL resolution
+        // This allows cookie/localStorage/URL param overrides
         remotes: {
-          shared_components: isProduction
-            ? `shared_components@${getRemoteUrl('shared_components', 'https://shared-components.vercel.app')}/remoteEntry.js`
-            : 'shared_components@http://localhost:3001/remoteEntry.js',
-          shared_data: isProduction
-            ? `shared_data@${getRemoteUrl('shared_data', 'https://shared-data.vercel.app')}/remoteEntry.js`
-            : 'shared_data@http://localhost:3002/remoteEntry.js',
-          content_shell: isProduction
-            ? `content_shell@${getRemoteUrl('content_shell', 'https://content-platform-shell.vercel.app')}/remoteEntry.js`
-            : 'content_shell@http://localhost:3003/remoteEntry.js',
-          reports_tab: isProduction
-            ? `reports_tab@${getRemoteUrl('reports_tab', 'https://reports-tab.vercel.app')}/remoteEntry.js`
-            : 'reports_tab@http://localhost:3006/remoteEntry.js',
-          user_tab: isProduction
-            ? `user_tab@${getRemoteUrl('user_tab', 'https://user-tab.vercel.app')}/remoteEntry.js`
-            : 'user_tab@http://localhost:3007/remoteEntry.js',
+          shared_components: 'shared_components@dynamic',
+          shared_data: 'shared_data@dynamic',
+          content_shell: 'content_shell@dynamic',
+          reports_tab: 'reports_tab@dynamic',
+          user_tab: 'user_tab@dynamic',
         },
         shared: {
           react: { singleton: true, requiredVersion: '^18.0.0', strictVersion: false },

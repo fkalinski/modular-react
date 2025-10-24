@@ -49,6 +49,8 @@ module.exports = (env, argv) => {
           './graphql': './src/graphql',
           './context': './src/context',
           './events': './src/events',
+          './utils': './src/utils/loadDynamicRemote',
+          './mfDevTools': './src/utils/mfDevTools',
         },
         shared: {
           react: {

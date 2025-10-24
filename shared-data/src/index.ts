@@ -12,3 +12,13 @@ export { eventBus, PlatformEvent, type EventPayload } from './events';
 
 // GraphQL
 export { createApolloClient, ApolloProvider, gql, CONTENT_ITEM_FIELDS, GET_CONTENT_ITEMS } from './graphql';
+
+// Module Federation utilities
+export {
+  loadDynamicRemote,
+  preloadRemote,
+  getRemoteURL,
+  isRemoteOverridden,
+  getAllOverrides,
+} from './utils/loadDynamicRemote';
+export { default as mfDevTools } from './utils/mfDevTools';

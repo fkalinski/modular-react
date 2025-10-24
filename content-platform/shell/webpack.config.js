@@ -49,19 +49,13 @@ module.exports = (env, argv) => {
         exposes: {
           './ContentPlatform': './src/ContentPlatform',
         },
+        // Use dynamic remotes to enable runtime URL resolution
+        // This allows cookie/localStorage/URL param overrides
         remotes: {
-          shared_components: isProduction
-            ? `shared_components@${getRemoteUrl('shared_components', 'https://shared-components.vercel.app')}/remoteEntry.js`
-            : 'shared_components@http://localhost:3001/remoteEntry.js',
-          shared_data: isProduction
-            ? `shared_data@${getRemoteUrl('shared_data', 'https://shared-data.vercel.app')}/remoteEntry.js`
-            : 'shared_data@http://localhost:3002/remoteEntry.js',
-          files_tab: isProduction
-            ? `files_tab@${getRemoteUrl('files_tab', 'https://files-folders.vercel.app')}/remoteEntry.js`
-            : 'files_tab@http://localhost:3004/remoteEntry.js',
-          hubs_tab: isProduction
-            ? `hubs_tab@${getRemoteUrl('hubs_tab', 'https://hubs-tab.vercel.app')}/remoteEntry.js`
-            : 'hubs_tab@http://localhost:3005/remoteEntry.js',
+          shared_components: 'shared_components@dynamic',
+          shared_data: 'shared_data@dynamic',
+          files_tab: 'files_tab@dynamic',
+          hubs_tab: 'hubs_tab@dynamic',
         },
         shared: {
           react: { singleton: true, requiredVersion: packageJson.dependencies.react, strictVersion: false },

@@ -1,27 +1,52 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { Provider, useDispatch } from 'react-redux';
 
+// Dynamic remote loader - loads at runtime with cookie/localStorage/URL override support
+// This enables testing different remote versions without rebuilding
+const loadRemote = async (remoteName: string, modulePath: string) => {
+  try {
+    // Try to load using dynamic loader from shared_data
+    const utils = await import('shared_data/utils');
+    return await utils.loadDynamicRemote(remoteName, modulePath);
+  } catch (error) {
+    console.warn(`Dynamic loader not available, falling back to static import:`, error);
+    // Fallback to direct webpack import
+    return import(`${remoteName}/${modulePath}`);
+  }
+};
+
+// Initialize dev tools in development mode
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  import('shared_data/mfDevTools')
+    .then(() => {
+      console.log('Module Federation DevTools initialized');
+    })
+    .catch(() => {
+      console.log('Dev tools not available');
+    });
+}
+
 // Lazy load remote modules - Box design system components
-// Add error handling for graceful fallback if shared_components remote fails
+// Now using dynamic loader with cookie/localStorage/URL param override support
 const ThemeProvider = lazy(() =>
-  import('shared_components/Theme')
-    .then(m => ({ default: m.ThemeProvider }))
+  loadRemote('shared_components', './Theme')
+    .then((m: any) => ({ default: m.ThemeProvider }))
     .catch(() => ({
       default: ({ children }: { children: React.ReactNode }) => <>{children}</>
     }))
 );
 
 const Sidebar = lazy(() =>
-  import('shared_components/Sidebar')
-    .then(m => ({ default: m.Sidebar }))
+  loadRemote('shared_components', './Sidebar')
+    .then((m: any) => ({ default: m.Sidebar }))
     .catch(() => ({
       default: () => <div style={{ width: '60px', height: '100vh', background: '#000' }} />
     }))
 );
 
 const TopBar = lazy(() =>
-  import('shared_components/TopBar')
-    .then(m => ({ default: m.TopBar }))
+  loadRemote('shared_components', './TopBar')
+    .then((m: any) => ({ default: m.TopBar }))
     .catch(() => ({
       default: () => <div style={{ height: '56px', borderBottom: '1px solid #e2e2e2', padding: '12px' }}>
         <div style={{ color: '#999' }}>TopBar unavailable</div>
@@ -30,8 +55,8 @@ const TopBar = lazy(() =>
 );
 
 const SearchBar = lazy(() =>
-  import('shared_components/SearchBar')
-    .then(m => ({ default: m.SearchBar }))
+  loadRemote('shared_components', './SearchBar')
+    .then((m: any) => ({ default: m.SearchBar }))
     .catch(() => ({
       default: ({ value, onChange, placeholder }: any) => (
         <input
@@ -46,25 +71,34 @@ const SearchBar = lazy(() =>
 );
 
 const NavigationProvider = lazy(() =>
-  import('shared_components/NavigationService')
-    .then(m => ({ default: m.NavigationProvider }))
+  loadRemote('shared_components', './NavigationService')
+    .then((m: any) => ({ default: m.NavigationProvider }))
     .catch(() => ({
       default: ({ children }: { children: React.ReactNode }) => <>{children}</>
     }))
 );
 
 // Lazy load tabs
-const ContentShell = lazy(() => import('content_shell/ContentPlatform').catch(() => ({
-  default: () => <div style={{ padding: '20px', color: '#999' }}>Content platform not available</div>
-})));
+const ContentShell = lazy(() =>
+  loadRemote('content_shell', './ContentPlatform')
+    .catch(() => ({
+      default: () => <div style={{ padding: '20px', color: '#999' }}>Content platform not available</div>
+    }))
+);
 
-const ReportsTab = lazy(() => import('reports_tab/App').catch(() => ({
-  default: () => <div style={{ padding: '20px', color: '#999' }}>Reports tab not available</div>
-})));
+const ReportsTab = lazy(() =>
+  loadRemote('reports_tab', './App')
+    .catch(() => ({
+      default: () => <div style={{ padding: '20px', color: '#999' }}>Reports tab not available</div>
+    }))
+);
 
-const UserTab = lazy(() => import('user_tab/App').catch(() => ({
-  default: () => <div style={{ padding: '20px', color: '#999' }}>User tab not available</div>
-})));
+const UserTab = lazy(() =>
+  loadRemote('user_tab', './App')
+    .catch(() => ({
+      default: () => <div style={{ padding: '20px', color: '#999' }}>User tab not available</div>
+    }))
+);
 
 type TabId = 'content' | 'reports' | 'user';
 
@@ -116,8 +150,8 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const dispatchSearch = async () => {
       try {
-        const { setSearchText } = await import('shared_data/store');
-        dispatch(setSearchText(searchValue));
+        const sharedData = await loadRemote('shared_data', './store');
+        dispatch(sharedData.setSearchText(searchValue));
       } catch (error) {
         console.error('Failed to dispatch search:', error);
       }
@@ -283,8 +317,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const initStore = async () => {
       try {
-        const { createStore } = await import('shared_data/store');
-        setStore(createStore());
+        // Use dynamic loader for shared_data
+        const sharedData = await loadRemote('shared_data', './store');
+        setStore(sharedData.createStore());
       } catch (error) {
         console.error('Failed to initialize store:', error);
       }
