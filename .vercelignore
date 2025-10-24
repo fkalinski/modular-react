@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# Build outputs (will be handled per-app)
+**/dist/
+**/.next/
+**/.vercel/
+
+# Development
+**/.turbo/
+**/coverage/
+
+# Documentation (except README)
+*.md
+!README.md
+!**/README.md
+
+# Images and assets (large files)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+
+# Tests
+**/__tests__/
+**/e2e-tests/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Config files
+.env.local
+.env*.local
+**/.DS_Store
+
+# Git
+.git/
+.github/

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:prod",
+  "buildCommand": "cd ../.. && turbo run build:prod --filter=@content-platform/shell",
   "outputDirectory": "dist",
   "devCommand": "npm start",
   "installCommand": "npm install",

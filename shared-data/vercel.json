@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && turbo run build:prod --filter=@content-platform/files-folders",
+  "buildCommand": "cd ../.. && turbo run build:prod --filter=@modular-platform/shared-data",
   "outputDirectory": "dist",
   "devCommand": "npm start",
   "installCommand": "npm install",
@@ -22,6 +22,12 @@
           "value": "X-Requested-With, Content-Type, Accept"
         }
       ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
