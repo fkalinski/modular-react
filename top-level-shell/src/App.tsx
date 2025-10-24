@@ -17,6 +17,7 @@ const loadRemote = async (remoteName: string, modulePath: string) => {
 };
 
 // Initialize dev tools in development mode
+// @ts-ignore - process.env is provided by webpack DefinePlugin
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   import('shared_data/mfDevTools')
     .then(() => {
@@ -29,7 +30,7 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 
 // Lazy load remote modules - Box design system components
 // Now using dynamic loader with cookie/localStorage/URL param override support
-const ErrorBoundary = lazy(() =>
+const ErrorBoundary: React.LazyExoticComponent<React.ComponentType<{ children: React.ReactNode; fallback?: React.ReactNode }>> = lazy(() =>
   loadRemote('shared_components', './ErrorBoundary')
     .then((m: any) => ({ default: m.ErrorBoundary }))
     .catch(() => ({
@@ -37,7 +38,7 @@ const ErrorBoundary = lazy(() =>
     }))
 );
 
-const ThemeProvider = lazy(() =>
+const ThemeProvider: React.LazyExoticComponent<React.ComponentType<{ children: React.ReactNode }>> = lazy(() =>
   loadRemote('shared_components', './Theme')
     .then((m: any) => ({ default: m.ThemeProvider }))
     .catch(() => ({
@@ -45,7 +46,11 @@ const ThemeProvider = lazy(() =>
     }))
 );
 
-const Sidebar = lazy(() =>
+const Sidebar: React.LazyExoticComponent<React.ComponentType<{
+  items: Array<{ id: string; label: string; icon: React.ReactNode }>;
+  activeId: string;
+  onItemClick: (item: { id: string }) => void;
+}>> = lazy(() =>
   loadRemote('shared_components', './Sidebar')
     .then((m: any) => ({ default: m.Sidebar }))
     .catch(() => ({
@@ -53,7 +58,14 @@ const Sidebar = lazy(() =>
     }))
 );
 
-const TopBar = lazy(() =>
+const TopBar: React.LazyExoticComponent<React.ComponentType<{
+  searchComponent?: React.ReactNode;
+  onUploadClick?: () => void;
+  onNotificationsClick?: () => void;
+  onUserClick?: () => void;
+  userName?: string;
+  notificationCount?: number;
+}>> = lazy(() =>
   loadRemote('shared_components', './TopBar')
     .then((m: any) => ({ default: m.TopBar }))
     .catch(() => ({
@@ -63,7 +75,11 @@ const TopBar = lazy(() =>
     }))
 );
 
-const SearchBar = lazy(() =>
+const SearchBar: React.LazyExoticComponent<React.ComponentType<{
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}>> = lazy(() =>
   loadRemote('shared_components', './SearchBar')
     .then((m: any) => ({ default: m.SearchBar }))
     .catch(() => ({
@@ -79,7 +95,11 @@ const SearchBar = lazy(() =>
     }))
 );
 
-const NavigationProvider = lazy(() =>
+const NavigationProvider: React.LazyExoticComponent<React.ComponentType<{
+  children: React.ReactNode;
+  currentSection?: string;
+  onNavigate?: (target: string) => void;
+}>> = lazy(() =>
   loadRemote('shared_components', './NavigationService')
     .then((m: any) => ({ default: m.NavigationProvider }))
     .catch(() => ({
@@ -363,9 +383,17 @@ const App: React.FC = () => {
     return <div style={{ padding: '20px', textAlign: 'center' }}>Initializing...</div>;
   }
 
+  // Mock user - in production this would come from authentication
+  const mockUser = {
+    id: 'user-1',
+    name: 'Platform User',
+    email: 'user@example.com',
+    permissions: ['read', 'write', 'admin'],
+  };
+
   return (
     <Provider store={store}>
-      <PlatformProvider>
+      <PlatformProvider user={mockUser}>
         <AppContent />
       </PlatformProvider>
     </Provider>
