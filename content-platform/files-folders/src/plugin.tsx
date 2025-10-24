@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useMemo } from 'react';
 import type { TabPlugin, TabProps, ContentItem } from '@tab-contract';
 
 // Lazy load shared components
@@ -69,6 +69,28 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
       setFiles(mockFiles);
     }
   }, [context.filters.searchText]);
+
+  // Memoize locations to prevent unnecessary re-renders of ContentPicker
+  const pickerLocations = useMemo(() => {
+    return mockFolderTree.map((node: any) => ({
+      id: node.id,
+      name: node.label,
+      type: 'folder' as const,
+      icon: node.icon,
+      children: node.children?.map((child: any) => ({
+        id: child.id,
+        name: child.label,
+        type: 'folder' as const,
+        icon: child.icon,
+        children: child.children?.map((grandchild: any) => ({
+          id: grandchild.id,
+          name: grandchild.label,
+          type: 'folder' as const,
+          icon: grandchild.icon,
+        })),
+      })),
+    }));
+  }, []); // mockFolderTree is const, so empty deps array is safe
 
   const handleFolderSelect = (node: any) => {
     setSelectedFolder(node.id);
@@ -297,24 +319,7 @@ const FilesTabComponent: React.FC<TabProps> = ({ context, onNavigate, onSelect }
             setIsPickerOpen(false);
           }}
           title="Choose Destination"
-          locations={mockFolderTree.map((node: any) => ({
-            id: node.id,
-            name: node.label,
-            type: 'folder' as const,
-            icon: node.icon,
-            children: node.children?.map((child: any) => ({
-              id: child.id,
-              name: child.label,
-              type: 'folder' as const,
-              icon: child.icon,
-              children: child.children?.map((grandchild: any) => ({
-                id: grandchild.id,
-                name: grandchild.label,
-                type: 'folder' as const,
-                icon: grandchild.icon,
-              })),
-            })),
-          }))}
+          locations={pickerLocations}
           multiSelect={false}
           searchable={true}
           confirmLabel="Move Here"

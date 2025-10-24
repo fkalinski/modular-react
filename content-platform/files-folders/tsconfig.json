@@ -8,10 +8,10 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./@mf-types"],
     "paths": {
-      "@tab-contract": ["../tab-contract/src"],
-      "*": ["./@mf-types/*"]
+      "@tab-contract": ["../tab-contract/src"]
     }
   },
-  "include": ["src/**/*", "./@mf-types/*"]
+  "include": ["src/**/*", "@mf-types/**/*.d.ts"]
 }

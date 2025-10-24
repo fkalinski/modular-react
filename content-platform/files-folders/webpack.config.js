@@ -53,6 +53,7 @@ module.exports = (env, argv) => {
         },
         shareStrategy: 'version-first',
         dts: {
+          generateTypes: true,
           consumeTypes: true,
         },
       }),

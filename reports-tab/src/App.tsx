@@ -199,11 +199,11 @@ const ReportsApp: React.FC = () => {
                     key: 'actions',
                     header: 'Actions',
                     width: '10%',
-                    render: (report: Report) => (
+                    render: (report) => (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          alert(`View ${report.name}`);
+                          alert(`View ${(report as Report).name}`);
                         }}
                         style={{
                           padding: '4px 12px',
@@ -223,7 +223,7 @@ const ReportsApp: React.FC = () => {
                 selectedIds={selectedReports}
                 onSelectionChange={setSelectedReports}
                 showCheckboxes={true}
-                onRowClick={(report: Report) => alert(`View report: ${report.name}`)}
+                onRowClick={(report) => alert(`View report: ${(report as Report).name}`)}
               />
             </Suspense>
           </div>

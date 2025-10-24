@@ -8,9 +8,7 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "paths": {
-      "*": ["./@mf-types/*"]
-    }
+    "typeRoots": ["./node_modules/@types", "./@mf-types"]
   },
-  "include": ["src/**/*", "./@mf-types/*"]
+  "include": ["src/**/*", "@mf-types/**/*.d.ts"]
 }
