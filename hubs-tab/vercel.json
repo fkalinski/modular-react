@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "cd .. && turbo run build:prod --filter=hubs-tab",
-  "outputDirectory": "dist",
+  "buildCommand": "turbo run build:prod --filter=hubs-tab",
+  "outputDirectory": "hubs-tab/dist",
   "devCommand": "npm start",
   "installCommand": "npm install",
   "framework": null,
