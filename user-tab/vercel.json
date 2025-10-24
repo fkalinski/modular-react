@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "buildCommand": "npx turbo run build:prod --filter=@modular-platform/user-tab",
+  "outputDirectory": "user-tab/dist",
+  "devCommand": "npm start",
+  "installCommand": "npm install",
+  "framework": null,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-Requested-With, Content-Type, Accept"
+        }
+      ]
+    }
+  ]
+}

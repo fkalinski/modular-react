@@ -1,0 +1,28 @@
+{
+  "name": "@content-platform/tab-contract",
+  "version": "1.0.0",
+  "description": "Tab plugin contract for content platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "publish:npm": "npm publish --access public",
+    "publish:artifactory": "npm publish --registry https://your-company.jfrog.io/artifactory/api/npm/npm-local/"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "@types/react": "^18.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}

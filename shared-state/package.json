@@ -1,0 +1,25 @@
+{
+  "name": "@platform/shared-state",
+  "version": "1.0.0",
+  "description": "Shared Redux store for platform state management (comparison with Context pattern)",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "keywords": ["redux", "state-management", "micro-frontend"],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-redux": "^8.0.0 || ^9.0.0"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.45",
+    "typescript": "^5.3.3"
+  }
+}

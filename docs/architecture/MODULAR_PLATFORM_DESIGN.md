@@ -22,6 +22,7 @@ This document outlines the architecture for transforming a monolithic React appl
 6. Share Redux state and context across boundaries
 7. Support eventual JSON-based runtime composition
 8. Maintain independent deployment capabilities
+9. **Facilitate contributions to shared components instead of cloning** - Design the system to make it easier to enhance shared components rather than duplicate them, preventing wasted effort and technical debt
 
 ## Architecture Overview
 
@@ -172,6 +173,132 @@ packages/
   version: '1.2.3' // Auto-incremented by build
 }
 ```
+
+#### Component Contribution Workflow
+
+**Anti-Pattern to Avoid: Clone & Modify**
+```typescript
+// ❌ BAD: Team clones shared component and modifies locally
+// hubs-tab/src/components/CustomTable.tsx
+import { Table } from 'shared_components/Table';
+
+// Copy entire Table implementation and modify
+export const CustomTable = ({ data, columns }) => {
+  // 200 lines of duplicated code with small tweaks
+  // Now you have to maintain this copy forever
+  // Bug fixes in shared Table won't apply here
+  // Changes are lost to other teams
+};
+```
+
+**Recommended Pattern: Extend & Contribute**
+
+**Step 1: Identify Need**
+```typescript
+// ✅ GOOD: Use composition and extension patterns
+// hubs-tab/src/components/HubTable.tsx
+import { Table, TableColumn } from 'shared_components/Table';
+import { MemberBadge } from './MemberBadge';
+
+export const HubTable = ({ hubs }) => {
+  const columns: TableColumn[] = [
+    // Use shared Table with custom cell renderers
+    { key: 'name', header: 'Hub Name' },
+    {
+      key: 'members',
+      header: 'Members',
+      render: (hub) => <MemberBadge members={hub.members} />
+    },
+  ];
+
+  return <Table data={hubs} columns={columns} />;
+};
+```
+
+**Step 2: If Extension Points Don't Exist, Contribute Them**
+
+```typescript
+// Contribution workflow:
+// 1. Open issue in shared-components repo
+// 2. Propose extension point: "Table needs custom row actions"
+// 3. Submit PR with new feature
+// 4. All teams benefit from the enhancement
+
+// shared-components/src/components/Table.tsx
+export interface TableColumn<T> {
+  key: string;
+  header: string;
+  render?: (item: T) => React.ReactNode;
+  // NEW: Your contribution
+  actions?: TableAction<T>[];
+  onRowClick?: (item: T) => void;
+}
+
+export interface TableAction<T> {
+  id: string;
+  label: string;
+  icon?: string;
+  handler: (item: T) => void;
+  disabled?: (item: T) => boolean;
+}
+```
+
+**Step 3: Version Safely**
+
+```typescript
+// Your team immediately uses the new feature
+// Other teams get it automatically on next minor version
+
+// hubs-tab/package.json
+{
+  "dependencies": {
+    "@shared-components/library": "^1.2.0" // Now includes table actions
+  }
+}
+
+// files-tab/package.json
+{
+  "dependencies": {
+    "@shared-components/library": "^1.0.0" // Still works, gets upgrade automatically
+  }
+}
+```
+
+**Contribution Guidelines**
+
+1. **Before Forking/Cloning:**
+   - Check if component supports composition/extension patterns
+   - Open issue describing your use case
+   - Discuss with platform team if extension point needed
+
+2. **Contributing Enhancements:**
+   - Fork shared-components repo
+   - Add extension point (not specific feature)
+   - Write tests and documentation
+   - Submit PR with real-world use case
+   - Fast-track review for active contributors
+
+3. **Design for Extension:**
+   - All components should support render props
+   - Provide styling/theming hooks
+   - Allow custom renderers for complex cells
+   - Support action/toolbar composition
+   - Use plugin patterns where appropriate
+
+4. **Fast-Track Process for Contributors:**
+   - Contributors get write access after 3 accepted PRs
+   - Automated testing required for all changes
+   - Semantic versioning ensures safe upgrades
+   - Breaking changes require RFC process
+
+5. **Benefits of Contributing:**
+   - ✅ All teams get your enhancement
+   - ✅ Maintenance shared across teams
+   - ✅ Bug fixes propagate automatically
+   - ✅ Consistent UX across platform
+   - ✅ Reduced duplicate code
+   - ✅ Better performance (shared bundle)
+   - ✅ Cross-team knowledge sharing
 
 ### 2. Semantic Versioning Strategy
 

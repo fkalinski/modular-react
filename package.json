@@ -1,0 +1,38 @@
+{
+  "name": "modular-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Modular React Platform with Module Federation",
+  "workspaces": [
+    "shared-components",
+    "shared-data",
+    "content-platform/shell",
+    "content-platform/files-folders",
+    "content-platform/tab-contract",
+    "hubs-tab",
+    "reports-tab",
+    "user-tab",
+    "top-level-shell",
+    "graphql-server",
+    "contract-tests",
+    "platform-context",
+    "shared-state",
+    "content-platform-data"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "build:prod": "turbo run build:prod",
+    "dev": "turbo run dev --parallel",
+    "clean": "turbo run clean",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  },
+  "packageManager": "npm@10.2.4"
+}
