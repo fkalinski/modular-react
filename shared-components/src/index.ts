@@ -13,6 +13,7 @@ export { ContentPicker, type ContentPickerProps, type ContentLocation } from './
 export { Breadcrumbs, type BreadcrumbsProps, type BreadcrumbItem } from './components/Breadcrumbs';
 export { Preview, type PreviewProps } from './components/Preview';
 export { HighlightText, type HighlightTextProps } from './components/HighlightText';
+export { ErrorBoundary, withErrorBoundary } from './components/ErrorBoundary';
 export { type ContentItem } from './components/types';
 
 // Services

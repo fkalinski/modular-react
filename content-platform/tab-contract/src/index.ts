@@ -128,3 +128,6 @@ export interface TabManifest {
   order: number;
   config?: Record<string, any>;
 }
+
+// Export v2 contract (enhanced with Platform Context integration)
+export * from './v2';
