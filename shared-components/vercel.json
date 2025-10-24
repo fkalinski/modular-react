@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "turbo run build:prod --filter=@modular-platform/shared-components",
+  "buildCommand": "npx turbo run build:prod --filter=@modular-platform/shared-components",
   "outputDirectory": "shared-components/dist",
   "devCommand": "npm start",
   "installCommand": "npm install",

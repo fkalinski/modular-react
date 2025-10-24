@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "turbo run build:prod --filter=@modular-platform/top-level-shell",
+  "buildCommand": "npx turbo run build:prod --filter=@modular-platform/top-level-shell",
   "outputDirectory": "top-level-shell/dist",
   "devCommand": "npm start",
   "installCommand": "npm install",

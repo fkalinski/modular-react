@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "turbo run build:prod --filter=@modular-platform/user-tab",
+  "buildCommand": "npx turbo run build:prod --filter=@modular-platform/user-tab",
   "outputDirectory": "user-tab/dist",
   "devCommand": "npm start",
   "installCommand": "npm install",

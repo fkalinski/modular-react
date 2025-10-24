@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "turbo run build:prod --filter=@content-platform/files-folders",
+  "buildCommand": "npx turbo run build:prod --filter=@content-platform/files-folders",
   "outputDirectory": "content-platform/files-folders/dist",
   "devCommand": "npm start",
   "installCommand": "npm install",
