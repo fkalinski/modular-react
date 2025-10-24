@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && turbo run build:prod --filter=@modular-platform/top-level-shell",
+  "buildCommand": "cd .. && turbo run build:prod --filter=@modular-platform/top-level-shell",
   "outputDirectory": "dist",
   "devCommand": "npm start",
   "installCommand": "npm install",

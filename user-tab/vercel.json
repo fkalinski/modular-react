@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && turbo run build:prod --filter=@modular-platform/user-tab",
+  "buildCommand": "cd .. && turbo run build:prod --filter=@modular-platform/user-tab",
   "outputDirectory": "dist",
   "devCommand": "npm start",
   "installCommand": "npm install",

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && turbo run build:prod --filter=@modular-platform/shared-data",
+  "buildCommand": "cd .. && turbo run build:prod --filter=@modular-platform/shared-data",
   "outputDirectory": "dist",
   "devCommand": "npm start",
   "installCommand": "npm install",
