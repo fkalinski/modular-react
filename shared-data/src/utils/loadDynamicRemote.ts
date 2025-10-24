@@ -29,19 +29,27 @@ interface DefaultRemoteURLs {
 
 /**
  * Get default remote URLs based on environment
+ *
+ * Production uses major version aliases for automatic updates:
+ * - https://shared-components-v1.vercel.app/ (auto-updates to latest 1.x)
+ *
+ * To pin to specific version, use environment variables:
+ * - REMOTE_SHARED_COMPONENTS_URL=https://shared-components-v1-5-0.vercel.app/remoteEntry.js
  */
 function getDefaultRemoteURLs(): DefaultRemoteURLs {
   const isProduction = process.env.NODE_ENV === 'production';
 
   if (isProduction) {
     return {
-      shared_components: process.env.REMOTE_SHARED_COMPONENTS_URL || 'https://shared-components.vercel.app/remoteEntry.js',
-      shared_data: process.env.REMOTE_SHARED_DATA_URL || 'https://shared-data.vercel.app/remoteEntry.js',
-      content_shell: process.env.REMOTE_CONTENT_SHELL_URL || 'https://content-platform-shell.vercel.app/remoteEntry.js',
-      reports_tab: process.env.REMOTE_REPORTS_TAB_URL || 'https://reports-tab.vercel.app/remoteEntry.js',
-      user_tab: process.env.REMOTE_USER_TAB_URL || 'https://user-tab.vercel.app/remoteEntry.js',
-      files_folders: process.env.REMOTE_FILES_FOLDERS_URL || 'https://files-folders-tab.vercel.app/remoteEntry.js',
-      hubs_tab: process.env.REMOTE_HUBS_TAB_URL || 'https://hubs-tab.vercel.app/remoteEntry.js',
+      // Use major version aliases (v1, v2, etc) for automatic minor/patch updates
+      // Override via environment variables for specific versions if needed
+      shared_components: process.env.REMOTE_SHARED_COMPONENTS_URL || 'https://shared-components-v1.vercel.app/remoteEntry.js',
+      shared_data: process.env.REMOTE_SHARED_DATA_URL || 'https://shared-data-v1.vercel.app/remoteEntry.js',
+      content_shell: process.env.REMOTE_CONTENT_SHELL_URL || 'https://content-shell-v1.vercel.app/remoteEntry.js',
+      reports_tab: process.env.REMOTE_REPORTS_TAB_URL || 'https://reports-tab-v1.vercel.app/remoteEntry.js',
+      user_tab: process.env.REMOTE_USER_TAB_URL || 'https://user-tab-v1.vercel.app/remoteEntry.js',
+      files_folders: process.env.REMOTE_FILES_FOLDERS_URL || 'https://files-folders-v1.vercel.app/remoteEntry.js',
+      hubs_tab: process.env.REMOTE_HUBS_TAB_URL || 'https://hubs-tab-v1.vercel.app/remoteEntry.js',
     };
   }
 
