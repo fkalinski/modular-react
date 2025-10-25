@@ -1,0 +1,11 @@
+# Vercel Deployment URLs
+# Generated: Fri Oct 24 12:04:29 CEST 2025
+
+shared-components=https://vercel.com/fkalinskis-projects/shared-components/settings
+shared-data=https://vercel.com/fkalinskis-projects/shared-data/settings
+files-folders=https://vercel.com/fkalinskis-projects/files-folders/settings
+hubs-tab=https://vercel.com/fkalinskis-projects/hubs-tab/settings
+reports-tab=https://vercel.com/fkalinskis-projects/reports-tab/settings
+user-tab=https://vercel.com/fkalinskis-projects/user-tab/settings
+content-platform-shell=https://vercel.com/fkalinskis-projects/shell/settings
+top-level-shell=https://vercel.com/fkalinskis-projects/top-level-shell/settings
