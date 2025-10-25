@@ -50,6 +50,8 @@ function getDefaultRemoteURLs(): DefaultRemoteURLs {
       user_tab: process.env.REMOTE_USER_TAB_URL || 'https://user-tab-v1.vercel.app/remoteEntry.js',
       files_folders: process.env.REMOTE_FILES_FOLDERS_URL || 'https://files-folders-v1.vercel.app/remoteEntry.js',
       hubs_tab: process.env.REMOTE_HUBS_TAB_URL || 'https://hubs-tab-v1.vercel.app/remoteEntry.js',
+      archives_tab: process.env.REMOTE_ARCHIVES_TAB_URL || 'https://archives-tab-v1.vercel.app/remoteEntry.js',
+      search_results_tab: process.env.REMOTE_SEARCH_RESULTS_TAB_URL || 'https://search-results-tab-v1.vercel.app/remoteEntry.js',
     };
   }
 
@@ -61,6 +63,8 @@ function getDefaultRemoteURLs(): DefaultRemoteURLs {
     user_tab: 'http://localhost:3007/remoteEntry.js',
     files_folders: 'http://localhost:3004/remoteEntry.js',
     hubs_tab: 'http://localhost:3005/remoteEntry.js',
+    archives_tab: 'http://localhost:3008/remoteEntry.js',
+    search_results_tab: 'http://localhost:3007/remoteEntry.js',
   };
 }
 

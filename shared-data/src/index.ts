@@ -12,6 +12,26 @@ export { eventBus, PlatformEvent, type EventPayload } from './events';
 
 // GraphQL
 export { createApolloClient, ApolloProvider, gql, CONTENT_ITEM_FIELDS, GET_CONTENT_ITEMS } from './graphql';
+export {
+  fragmentRegistry,
+  FragmentRegistry,
+  createFragment,
+  registerTabFragment,
+  type QueryFragment,
+  type ComposedQuery,
+} from './graphql';
+
+// Enrichers
+export {
+  enricherRegistry,
+  EnricherRegistry,
+  createEnricher,
+  registerTabEnricher,
+  enrichers,
+  type FieldEnricher,
+  type EnricherFunction,
+  type EnrichmentResult,
+} from './enrichers';
 
 // Module Federation utilities
 export {

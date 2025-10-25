@@ -56,6 +56,8 @@ module.exports = (env, argv) => {
           shared_data: 'shared_data@dynamic',
           files_tab: 'files_tab@dynamic',
           hubs_tab: 'hubs_tab@dynamic',
+          archives_tab: 'archives_tab@dynamic',
+          search_results_tab: 'search_results_tab@dynamic',
         },
         shared: {
           react: { singleton: true, requiredVersion: packageJson.dependencies.react, strictVersion: false },

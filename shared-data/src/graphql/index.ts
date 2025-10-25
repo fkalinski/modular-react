@@ -34,6 +34,16 @@ export const GET_CONTENT_ITEMS = gql`
   }
 `;
 
+// Export composition system
+export {
+  fragmentRegistry,
+  FragmentRegistry,
+  createFragment,
+  registerTabFragment,
+  type QueryFragment,
+  type ComposedQuery,
+} from './composition';
+
 // Export Apollo components
 export { ApolloProvider, gql };
 export type { ApolloClient };

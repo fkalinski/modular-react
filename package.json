@@ -9,6 +9,8 @@
     "content-platform/shell",
     "content-platform/files-folders",
     "content-platform/tab-contract",
+    "content-platform/archives-tab",
+    "content-platform/example-v2-tab",
     "hubs-tab",
     "reports-tab",
     "user-tab",

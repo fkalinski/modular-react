@@ -9,6 +9,25 @@ export { TopBar, type TopBarProps } from './components/TopBar';
 export { SearchBar, type SearchBarProps, type SearchScope } from './components/SearchBar';
 export { FileIcon, type FileIconProps, type FileType, getFileTypeFromName } from './components/FileIcon';
 export { ReactSingletonTest } from './components/ReactSingletonTest';
+export {
+  DataTable,
+  type DataTableProps,
+  type ColumnDefinition,
+  type RowAction,
+  type BulkAction,
+  type SortConfig,
+  type FilterConfig,
+  type SortDirection,
+  type FormatterType,
+  type FormatterOptions,
+  type CellRenderer,
+  format,
+  getNestedValue,
+  sortByField,
+  filterData,
+  getRowId,
+  getColumnWidth,
+} from './components/DataTable';
 export { ContentPicker, type ContentPickerProps, type ContentLocation } from './components/ContentPicker';
 export { Breadcrumbs, type BreadcrumbsProps, type BreadcrumbItem } from './components/Breadcrumbs';
 export { Preview, type PreviewProps } from './components/Preview';
