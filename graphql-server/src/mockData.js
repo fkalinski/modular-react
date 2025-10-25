@@ -230,6 +230,112 @@ export const formSubmissions = [
   },
 ];
 
+// Archives
+export const archives = [
+  {
+    id: 'archive-1',
+    name: 'Q4_2023_Reports.zip',
+    type: 'archive',
+    path: '/Archives/Q4_2023_Reports.zip',
+    parentId: null,
+    ownerId: '2',
+    createdAt: '2023-12-31T23:59:00Z',
+    updatedAt: '2023-12-31T23:59:00Z',
+    archiveDate: '2023-12-31T23:59:00Z',
+    archiveReason: 'End of quarter archival',
+    originalLocation: '/Reports/2023/Q4',
+    compressionType: 'ZIP',
+    compressedSize: 15728640, // 15 MB
+    originalSize: 52428800, // 50 MB
+    archivedById: '2',
+  },
+  {
+    id: 'archive-2',
+    name: 'Old_Project_Files.tar.gz',
+    type: 'archive',
+    path: '/Archives/Old_Project_Files.tar.gz',
+    parentId: null,
+    ownerId: '1',
+    createdAt: '2024-01-05T10:00:00Z',
+    updatedAt: '2024-01-05T10:00:00Z',
+    archiveDate: '2024-01-05T10:00:00Z',
+    archiveReason: 'Project completed - archiving for reference',
+    originalLocation: '/Projects/Legacy/OldProject',
+    compressionType: 'GZIP',
+    compressedSize: 104857600, // 100 MB
+    originalSize: 524288000, // 500 MB
+    archivedById: '1',
+  },
+  {
+    id: 'archive-3',
+    name: '2023_Marketing_Campaigns',
+    type: 'archive',
+    path: '/Archives/2023_Marketing_Campaigns',
+    parentId: null,
+    ownerId: '3',
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+    archiveDate: '2024-01-01T00:00:00Z',
+    archiveReason: 'Annual archival - new year',
+    originalLocation: '/Marketing/Campaigns/2023',
+    compressionType: 'NONE',
+    compressedSize: 209715200, // 200 MB (uncompressed)
+    originalSize: 209715200, // 200 MB
+    archivedById: '3',
+  },
+  {
+    id: 'archive-4',
+    name: 'Design_Assets_Archive.zip',
+    type: 'archive',
+    path: '/Archives/Design_Assets_Archive.zip',
+    parentId: null,
+    ownerId: '4',
+    createdAt: '2024-01-10T15:30:00Z',
+    updatedAt: '2024-01-10T15:30:00Z',
+    archiveDate: '2024-01-10T15:30:00Z',
+    archiveReason: 'Consolidating old design files',
+    originalLocation: '/Design/Assets/Old',
+    compressionType: 'ZIP',
+    compressedSize: 314572800, // 300 MB
+    originalSize: 1073741824, // 1 GB
+    archivedById: '4',
+  },
+  {
+    id: 'archive-5',
+    name: 'Customer_Data_Backup_2023.tar',
+    type: 'archive',
+    path: '/Archives/Customer_Data_Backup_2023.tar',
+    parentId: null,
+    ownerId: '2',
+    createdAt: '2023-12-28T18:00:00Z',
+    updatedAt: '2023-12-28T18:00:00Z',
+    archiveDate: '2023-12-28T18:00:00Z',
+    archiveReason: 'Compliance - annual data backup',
+    originalLocation: '/Data/Customers/2023',
+    compressionType: 'TAR',
+    compressedSize: 2147483648, // 2 GB
+    originalSize: 2147483648, // 2 GB (TAR doesn't compress)
+    archivedById: '2',
+  },
+  {
+    id: 'archive-6',
+    name: 'Training_Materials_2023.zip',
+    type: 'archive',
+    path: '/Archives/Training_Materials_2023.zip',
+    parentId: null,
+    ownerId: '1',
+    createdAt: '2024-01-15T12:00:00Z',
+    updatedAt: '2024-01-15T12:00:00Z',
+    archiveDate: '2024-01-15T12:00:00Z',
+    archiveReason: 'Updated training materials available',
+    originalLocation: '/HR/Training/2023',
+    compressionType: 'ZIP',
+    compressedSize: 52428800, // 50 MB
+    originalSize: 157286400, // 150 MB
+    archivedById: '1',
+  },
+];
+
 // Search results aggregator
 export const searchContent = (query, filters = {}) => {
   const lowerQuery = query.toLowerCase();

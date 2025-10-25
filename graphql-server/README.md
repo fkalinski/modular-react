@@ -32,6 +32,7 @@ Server runs on **http://localhost:4000/graphql**
 - **User**: User information (id, name, email, avatar)
 - **File**: File with metadata (id, name, size, mimeType, owner, dates)
 - **Folder**: Folder with children (id, name, itemCount, children)
+- **Archive**: Archived content with compression details (archiveDate, compressionType, originalLocation) **[NEW]**
 - **Hub**: Collaboration hub (id, name, description, memberCount, category)
 - **Report**: Report metadata (id, name, type, status, schedule)
 - **FormSubmission**: Form submission (id, formName, status, responseCount)
@@ -47,6 +48,10 @@ contentItems(parentId: ID, filters: ContentFilters): [ContentItem!]!
 # Hubs
 hubs(filters: HubFilters): [Hub!]!
 hub(id: ID!): Hub
+
+# Archives [NEW]
+archives(filters: ArchiveFilters): [Archive!]!
+archive(id: ID!): Archive
 
 # Reports
 reports: [Report!]!
@@ -77,6 +82,10 @@ updateHub(id: ID!, name: String, description: String): Hub!
 
 # Report generation
 generateReport(name: String!, type: String!): Report!
+
+# Archive operations [NEW]
+restoreArchive(id: ID!, targetPath: String!): File!
+deleteArchive(id: ID!): Boolean!
 ```
 
 ## Example Queries
@@ -150,6 +159,44 @@ query {
 }
 ```
 
+### Get all archives [NEW]
+
+```graphql
+query {
+  archives {
+    id
+    name
+    archiveDate
+    archiveReason
+    originalLocation
+    compressionType
+    compressedSize
+    originalSize
+    archivedBy {
+      name
+      email
+    }
+  }
+}
+```
+
+### Get filtered archives [NEW]
+
+```graphql
+query {
+  archives(filters: {
+    compressionType: "ZIP"
+    fromDate: "2024-01-01T00:00:00Z"
+  }) {
+    id
+    name
+    archiveDate
+    compressionType
+    compressedSize
+  }
+}
+```
+
 ### Get all hubs
 
 ```graphql
@@ -210,6 +257,30 @@ mutation {
 }
 ```
 
+### Restore an archive [NEW]
+
+```graphql
+mutation {
+  restoreArchive(
+    id: "archive-1"
+    targetPath: "/Restored/Q4_2023_Reports.zip"
+  ) {
+    id
+    name
+    path
+    size
+  }
+}
+```
+
+### Delete an archive [NEW]
+
+```graphql
+mutation {
+  deleteArchive(id: "archive-1")
+}
+```
+
 ### Create a hub
 
 ```graphql
@@ -233,9 +304,19 @@ The server includes mock data for:
 - **4 users**: John Doe, Jane Smith, Bob Johnson, Alice Brown
 - **3 folders**: My Documents, Projects, Shared
 - **5 files**: Various document types (docx, xlsx, pptx, md, png)
+- **6 archives**: Q4 Reports, Old Project Files, Marketing Campaigns, Design Assets, Customer Data Backup, Training Materials **[NEW]**
 - **4 hubs**: Engineering, Product Launch, Marketing, Design System
 - **5 reports**: Sales, Activity, Analytics, Performance, System reports
 - **3 form submissions**: Customer Feedback, Employee Survey, Bug Report
+
+### Archive Mock Data Details **[NEW]**
+
+1. Q4_2023_Reports.zip (ZIP, 15MB compressed from 50MB)
+2. Old_Project_Files.tar.gz (GZIP, 100MB compressed from 500MB)
+3. 2023_Marketing_Campaigns (NONE, 200MB uncompressed)
+4. Design_Assets_Archive.zip (ZIP, 300MB compressed from 1GB)
+5. Customer_Data_Backup_2023.tar (TAR, 2GB)
+6. Training_Materials_2023.zip (ZIP, 50MB compressed from 150MB)
 
 ## Development
 

@@ -61,6 +61,26 @@ export const typeDefs = gql`
     updatedAt: String!
   }
 
+  # Archive type
+  type Archive implements ContentItem {
+    id: ID!
+    name: String!
+    type: String!
+    path: String!
+    parentId: ID
+    owner: User!
+    createdAt: String!
+    updatedAt: String!
+    # Archive-specific fields
+    archiveDate: String!
+    archiveReason: String!
+    originalLocation: String!
+    compressionType: String!
+    compressedSize: Int!
+    originalSize: Int!
+    archivedBy: User!
+  }
+
   # Report type
   type Report {
     id: ID!
@@ -103,6 +123,13 @@ export const typeDefs = gql`
     isActive: Boolean
   }
 
+  input ArchiveFilters {
+    compressionType: String
+    fromDate: String
+    toDate: String
+    archivedById: ID
+  }
+
   # Queries
   type Query {
     # User queries
@@ -119,6 +146,10 @@ export const typeDefs = gql`
     # Hub queries
     hubs(filters: HubFilters): [Hub!]!
     hub(id: ID!): Hub
+
+    # Archive queries
+    archives(filters: ArchiveFilters): [Archive!]!
+    archive(id: ID!): Archive
 
     # Report queries
     reports: [Report!]!
@@ -145,5 +176,9 @@ export const typeDefs = gql`
 
     # Report mutations
     generateReport(name: String!, type: String!): Report!
+
+    # Archive mutations
+    restoreArchive(id: ID!, targetPath: String!): File!
+    deleteArchive(id: ID!): Boolean!
   }
 `;

@@ -5,6 +5,7 @@ import {
   hubs,
   reports,
   formSubmissions,
+  archives,
   searchContent,
 } from './mockData.js';
 
@@ -12,6 +13,9 @@ export const resolvers = {
   // Interface resolver for ContentItem
   ContentItem: {
     __resolveType(obj) {
+      if (obj.archiveDate !== undefined) {
+        return 'Archive';
+      }
       if (obj.size !== undefined) {
         return 'File';
       }
@@ -100,6 +104,30 @@ export const resolvers = {
     },
     hub: (_, { id }) => hubs.find(h => h.id === id),
 
+    // Archive queries
+    archives: (_, { filters }) => {
+      let result = archives;
+
+      if (filters?.compressionType) {
+        result = result.filter(a => a.compressionType === filters.compressionType);
+      }
+
+      if (filters?.archivedById) {
+        result = result.filter(a => a.archivedById === filters.archivedById);
+      }
+
+      if (filters?.fromDate) {
+        result = result.filter(a => new Date(a.archiveDate) >= new Date(filters.fromDate));
+      }
+
+      if (filters?.toDate) {
+        result = result.filter(a => new Date(a.archiveDate) <= new Date(filters.toDate));
+      }
+
+      return result.sort((a, b) => new Date(b.archiveDate) - new Date(a.archiveDate));
+    },
+    archive: (_, { id }) => archives.find(a => a.id === id),
+
     // Report queries
     reports: () => reports,
     report: (_, { id }) => reports.find(r => r.id === id),
@@ -140,6 +168,11 @@ export const resolvers = {
 
   FormSubmission: {
     submittedBy: (submission) => users.find(u => u.id === submission.submittedBy),
+  },
+
+  Archive: {
+    owner: (archive) => users.find(u => u.id === archive.ownerId),
+    archivedBy: (archive) => users.find(u => u.id === archive.archivedById),
   },
 
   // Mutation resolvers
@@ -220,6 +253,41 @@ export const resolvers = {
 
       reports.push(newReport);
       return newReport;
+    },
+
+    restoreArchive: (_, { id, targetPath }) => {
+      const archive = archives.find(a => a.id === id);
+      if (!archive) throw new Error('Archive not found');
+
+      // Create a new file from the restored archive
+      const restoredFile = {
+        id: `file-${files.length + 1}`,
+        name: archive.name,
+        type: 'file',
+        path: targetPath || archive.originalLocation,
+        parentId: null,
+        ownerId: archive.ownerId,
+        size: archive.originalSize,
+        mimeType: 'application/zip', // Simplified
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      files.push(restoredFile);
+
+      // Remove from archives
+      const index = archives.findIndex(a => a.id === id);
+      archives.splice(index, 1);
+
+      return restoredFile;
+    },
+
+    deleteArchive: (_, { id }) => {
+      const index = archives.findIndex(a => a.id === id);
+      if (index === -1) return false;
+
+      archives.splice(index, 1);
+      return true;
     },
   },
 };
