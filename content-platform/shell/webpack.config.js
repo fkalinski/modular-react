@@ -57,6 +57,8 @@ module.exports = (env, argv) => {
           files_tab: 'files_tab@dynamic',
           hubs_tab: 'hubs_tab@dynamic',
           archives_tab: 'archives_tab@dynamic',
+          file_requests_tab: 'file_requests_tab@dynamic',
+          forms_tab: 'forms_tab@dynamic',
           search_results_tab: 'search_results_tab@dynamic',
         },
         shared: {

@@ -10,6 +10,8 @@
     "content-platform/files-folders",
     "content-platform/tab-contract",
     "content-platform/archives-tab",
+    "content-platform/file-requests-tab",
+    "content-platform/forms-tab",
     "content-platform/example-v2-tab",
     "hubs-tab",
     "reports-tab",

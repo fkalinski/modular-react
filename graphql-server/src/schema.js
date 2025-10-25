@@ -92,14 +92,73 @@ export const typeDefs = gql`
     scheduleType: String!
   }
 
-  # Form Submission type (Archives)
+  # FileRequest type
+  type FileRequest {
+    id: ID!
+    fileName: String!
+    requestedBy: User!
+    requestedFrom: User!
+    requestedAt: String!
+    dueDate: String!
+    status: String!
+    priority: String!
+    message: String
+    fileSize: Int
+    fileType: String
+    uploadedAt: String
+  }
+
+  # Form type
+  type Form {
+    id: ID!
+    title: String!
+    description: String!
+    status: String!
+    createdBy: User!
+    createdAt: String!
+    updatedAt: String!
+    submissionCount: Int!
+    lastSubmissionAt: String
+    category: String!
+    isPublic: Boolean!
+  }
+
+  # FormSubmission type
   type FormSubmission {
     id: ID!
-    formName: String!
+    formId: ID!
+    form: Form!
     submittedBy: User!
     submittedAt: String!
     status: String!
-    responseCount: Int!
+    responseData: String!
+    ipAddress: String
+    userAgent: String
+  }
+
+  # UI Configuration types for SDUI (Level 3)
+  type ColumnConfig {
+    field: String!
+    label: String!
+    sortable: Boolean
+    formatter: String
+    width: Int
+    align: String
+  }
+
+  type ActionConfig {
+    id: String!
+    label: String!
+    icon: String
+    variant: String
+  }
+
+  type TableUIConfig {
+    columns: [ColumnConfig!]!
+    actions: [ActionConfig!]
+    bulkActions: [ActionConfig!]
+    defaultSort: String
+    defaultSortDirection: String
   }
 
   # Search results
@@ -130,6 +189,19 @@ export const typeDefs = gql`
     archivedById: ID
   }
 
+  input FileRequestFilters {
+    status: String
+    priority: String
+    requestedById: ID
+    requestedFromId: ID
+  }
+
+  input FormFilters {
+    status: String
+    category: String
+    createdById: ID
+  }
+
   # Queries
   type Query {
     # User queries
@@ -155,9 +227,21 @@ export const typeDefs = gql`
     reports: [Report!]!
     report(id: ID!): Report
 
-    # Form submission queries (Archives)
-    formSubmissions: [FormSubmission!]!
+    # FileRequest queries
+    fileRequests(filters: FileRequestFilters): [FileRequest!]!
+    fileRequest(id: ID!): FileRequest
+
+    # Form queries
+    forms(filters: FormFilters): [Form!]!
+    form(id: ID!): Form
+
+    # FormSubmission queries
+    formSubmissions(formId: ID): [FormSubmission!]!
     formSubmission(id: ID!): FormSubmission
+
+    # UI Configuration queries (for SDUI - Level 3)
+    formsTableConfig: TableUIConfig!
+    formSubmissionsTableConfig: TableUIConfig!
 
     # Search
     search(query: String!, filters: ContentFilters): SearchResults!
@@ -180,5 +264,16 @@ export const typeDefs = gql`
     # Archive mutations
     restoreArchive(id: ID!, targetPath: String!): File!
     deleteArchive(id: ID!): Boolean!
+
+    # FileRequest mutations
+    approveFileRequest(id: ID!): FileRequest!
+    rejectFileRequest(id: ID!, reason: String): FileRequest!
+    uploadFileForRequest(id: ID!, fileSize: Int!, fileType: String!): FileRequest!
+
+    # Form mutations
+    createForm(title: String!, description: String!, category: String!): Form!
+    updateForm(id: ID!, title: String, description: String, status: String): Form!
+    deleteForm(id: ID!): Boolean!
+    submitForm(formId: ID!, responseData: String!): FormSubmission!
   }
 `;

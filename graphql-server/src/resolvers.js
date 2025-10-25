@@ -4,6 +4,8 @@ import {
   folders,
   hubs,
   reports,
+  fileRequests,
+  forms,
   formSubmissions,
   archives,
   searchContent,
@@ -132,9 +134,103 @@ export const resolvers = {
     reports: () => reports,
     report: (_, { id }) => reports.find(r => r.id === id),
 
+    // FileRequest queries
+    fileRequests: (_, { filters }) => {
+      let result = fileRequests;
+
+      if (filters?.status) {
+        result = result.filter(r => r.status === filters.status);
+      }
+
+      if (filters?.priority) {
+        result = result.filter(r => r.priority === filters.priority);
+      }
+
+      if (filters?.requestedById) {
+        result = result.filter(r => r.requestedById === filters.requestedById);
+      }
+
+      if (filters?.requestedFromId) {
+        result = result.filter(r => r.requestedFromId === filters.requestedFromId);
+      }
+
+      return result.sort((a, b) => new Date(b.requestedAt) - new Date(a.requestedAt));
+    },
+    fileRequest: (_, { id }) => fileRequests.find(r => r.id === id),
+
+    // Form queries
+    forms: (_, { filters }) => {
+      let result = forms;
+
+      if (filters?.status) {
+        result = result.filter(f => f.status === filters.status);
+      }
+
+      if (filters?.category) {
+        result = result.filter(f => f.category === filters.category);
+      }
+
+      if (filters?.createdById) {
+        result = result.filter(f => f.createdById === filters.createdById);
+      }
+
+      return result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    },
+    form: (_, { id }) => forms.find(f => f.id === id),
+
     // Form submission queries
-    formSubmissions: () => formSubmissions,
-    formSubmission: (_, { id }) => formSubmissions.find(f => f.id === id),
+    formSubmissions: (_, { formId }) => {
+      let result = formSubmissions;
+
+      if (formId) {
+        result = result.filter(s => s.formId === formId);
+      }
+
+      return result.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+    },
+    formSubmission: (_, { id }) => formSubmissions.find(s => s.id === id),
+
+    // UI Configuration queries (for SDUI - Level 3)
+    formsTableConfig: () => ({
+      columns: [
+        { field: 'title', label: 'Form Title', sortable: true, width: 250 },
+        { field: 'category', label: 'Category', sortable: true, width: 150, align: 'center' },
+        { field: 'status', label: 'Status', sortable: true, width: 120, align: 'center' },
+        { field: 'submissionCount', label: 'Submissions', sortable: true, formatter: 'number', width: 120, align: 'right' },
+        { field: 'lastSubmissionAt', label: 'Last Submission', sortable: true, formatter: 'datetime', width: 180 },
+        { field: 'createdBy.name', label: 'Created By', sortable: true, width: 150 },
+        { field: 'isPublic', label: 'Public', sortable: true, formatter: 'boolean', width: 100, align: 'center' },
+      ],
+      actions: [
+        { id: 'view', label: 'View Submissions', icon: '👁️', variant: 'primary' },
+        { id: 'edit', label: 'Edit', icon: '✏️', variant: 'secondary' },
+        { id: 'delete', label: 'Delete', icon: '🗑️', variant: 'danger' },
+      ],
+      bulkActions: [
+        { id: 'archive', label: 'Archive Selected', icon: '📦', variant: 'secondary' },
+        { id: 'delete', label: 'Delete Selected', icon: '🗑️', variant: 'danger' },
+      ],
+      defaultSort: 'createdAt',
+      defaultSortDirection: 'desc',
+    }),
+
+    formSubmissionsTableConfig: () => ({
+      columns: [
+        { field: 'submittedBy.name', label: 'Submitted By', sortable: true, width: 180 },
+        { field: 'submittedAt', label: 'Submitted At', sortable: true, formatter: 'datetime', width: 180 },
+        { field: 'status', label: 'Status', sortable: true, width: 120, align: 'center' },
+        { field: 'ipAddress', label: 'IP Address', sortable: false, width: 150 },
+      ],
+      actions: [
+        { id: 'view', label: 'View Response', icon: '👁️', variant: 'primary' },
+        { id: 'download', label: 'Download', icon: '⬇️', variant: 'secondary' },
+      ],
+      bulkActions: [
+        { id: 'export', label: 'Export Selected', icon: '📥', variant: 'primary' },
+      ],
+      defaultSort: 'submittedAt',
+      defaultSortDirection: 'desc',
+    }),
 
     // Search
     search: (_, { query, filters }) => searchContent(query, filters),
@@ -166,8 +262,18 @@ export const resolvers = {
     generatedBy: (report) => users.find(u => u.id === report.generatedBy),
   },
 
+  FileRequest: {
+    requestedBy: (request) => users.find(u => u.id === request.requestedById),
+    requestedFrom: (request) => users.find(u => u.id === request.requestedFromId),
+  },
+
+  Form: {
+    createdBy: (form) => users.find(u => u.id === form.createdById),
+  },
+
   FormSubmission: {
-    submittedBy: (submission) => users.find(u => u.id === submission.submittedBy),
+    submittedBy: (submission) => users.find(u => u.id === submission.submittedById),
+    form: (submission) => forms.find(f => f.id === submission.formId),
   },
 
   Archive: {
@@ -288,6 +394,101 @@ export const resolvers = {
 
       archives.splice(index, 1);
       return true;
+    },
+
+    // FileRequest mutations
+    approveFileRequest: (_, { id }) => {
+      const request = fileRequests.find(r => r.id === id);
+      if (!request) throw new Error('File request not found');
+
+      request.status = 'approved';
+      return request;
+    },
+
+    rejectFileRequest: (_, { id, reason }) => {
+      const request = fileRequests.find(r => r.id === id);
+      if (!request) throw new Error('File request not found');
+
+      request.status = 'rejected';
+      if (reason) {
+        request.message = `${request.message}\n\nRejection reason: ${reason}`;
+      }
+      return request;
+    },
+
+    uploadFileForRequest: (_, { id, fileSize, fileType }) => {
+      const request = fileRequests.find(r => r.id === id);
+      if (!request) throw new Error('File request not found');
+
+      request.status = 'completed';
+      request.fileSize = fileSize;
+      request.fileType = fileType;
+      request.uploadedAt = new Date().toISOString();
+      return request;
+    },
+
+    // Form mutations
+    createForm: (_, { title, description, category }) => {
+      const newForm = {
+        id: `form-${forms.length + 1}`,
+        title,
+        description,
+        status: 'draft',
+        createdById: '1', // Default to first user
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        submissionCount: 0,
+        lastSubmissionAt: null,
+        category,
+        isPublic: false,
+      };
+
+      forms.push(newForm);
+      return newForm;
+    },
+
+    updateForm: (_, { id, title, description, status }) => {
+      const form = forms.find(f => f.id === id);
+      if (!form) throw new Error('Form not found');
+
+      if (title) form.title = title;
+      if (description) form.description = description;
+      if (status) form.status = status;
+      form.updatedAt = new Date().toISOString();
+
+      return form;
+    },
+
+    deleteForm: (_, { id }) => {
+      const index = forms.findIndex(f => f.id === id);
+      if (index === -1) return false;
+
+      forms.splice(index, 1);
+      return true;
+    },
+
+    submitForm: (_, { formId, responseData }) => {
+      const form = forms.find(f => f.id === formId);
+      if (!form) throw new Error('Form not found');
+
+      const newSubmission = {
+        id: `sub-${formSubmissions.length + 1}`,
+        formId,
+        submittedById: '1', // Default to first user
+        submittedAt: new Date().toISOString(),
+        status: 'pending',
+        responseData,
+        ipAddress: '192.168.1.1',
+        userAgent: 'Mozilla/5.0...',
+      };
+
+      formSubmissions.push(newSubmission);
+
+      // Update form submission count
+      form.submissionCount += 1;
+      form.lastSubmissionAt = newSubmission.submittedAt;
+
+      return newSubmission;
     },
   },
 };
